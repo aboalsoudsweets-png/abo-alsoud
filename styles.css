@@ -631,8 +631,132 @@ body{
   border-radius:8px;
   border:1px solid rgba(128,0,0,.1);
 }
+:root{
+  --maroon:#800000;
+  --gold:#FFD700;
+  --ivory:#fbf6f0;
+}
 
-/* ================= Toast ================= */
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Cairo","Amiri",sans-serif;
+  direction:rtl;
+  background:var(--ivory);
+  color:var(--maroon);
+}
+
+.container{max-width:980px;margin:auto;padding:0 1rem}
+
+/* HEADER */
+.site-header{text-align:center;padding:1rem 0}
+.site-title{font-family:"Amiri",serif;font-size:2.1rem}
+
+/* HERO */
+.hero-card{
+  text-align:center;
+  background:#fff;
+  padding:2rem 1rem;
+  border-radius:10px;
+  margin-bottom:1rem;
+}
+.hero-title{font-family:"Amiri",serif;font-size:2.6rem}
+.hero-underline{width:70px;height:6px;background:var(--gold);margin:.5rem auto}
+
+/* BUTTONS */
+.btn,.add-btn{
+  background:var(--maroon);
+  color:#fff;
+  border:none;
+  border-radius:28px;
+  padding:.6rem 1.2rem;
+  cursor:pointer;
+  font-weight:700;
+}
+
+/* MENU */
+.menu-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1rem;
+}
+
+/* ⭐ الإصلاح المهم هنا */
+.card-frame{
+  border:2px solid var(--gold);
+  border-radius:12px;
+  padding:6px;
+  background:#fff;
+}
+
+.card{
+  background:#fff;
+  border-radius:10px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+
+.card-body{
+  padding:1rem;
+  display:flex;
+  flex-direction:column;
+  gap:.4rem;
+  position:relative;
+  z-index:2;
+}
+
+.card-title{font-weight:800}
+.card-desc{color:#6b3a3a}
+.card-price{font-weight:900}
+
+/* SLIDER */
+.photo-slider{position:relative;overflow:hidden}
+.slides{display:flex;transition:transform .35s ease}
+.slide{
+  flex:0 0 100%;
+  height:220px;
+  object-fit:cover;
+}
+
+/* CART */
+.cart-panel{
+  margin:1rem 0;
+  padding:1rem;
+  background:#fff;
+  border-radius:10px;
+  text-align:center;
+}
+
+.cart-list{list-style:none;padding:0;margin:0}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  padding:.5rem 0;
+  border-bottom:1px dashed rgba(0,0,0,.1);
+}
+
+.cart-actions{display:flex;gap:.5rem;align-items:center}
+
+.remove-btn{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  border:none;
+  background:rgba(128,0,0,.1);
+  color:var(--maroon);
+  cursor:pointer;
+}
+
+/* TOTAL */
+.order-total{
+  display:flex;
+  justify-content:space-between;
+  font-weight:900;
+}
+
+/* TOAST */
 .site-toast{
   position:fixed;
   bottom:20px;
@@ -641,15 +765,14 @@ body{
   background:var(--maroon);
   color:#fff;
   padding:10px 18px;
-  border-radius:22px;
+  border-radius:20px;
   opacity:0;
   transition:.2s;
-  z-index:9999;
 }
 .site-toast.show{opacity:1}
 
-/* ================= Responsive ================= */
+/* RESPONSIVE */
 @media(min-width:700px){
   .menu-grid{grid-template-columns:repeat(2,1fr)}
-  .photo-slider .slide{height:260px}
+  .slide{height:260px}
 }
