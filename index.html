@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title></title>
+  <title>حلويات أبو السعود</title>
 
   <!-- Vintage Arabic fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -12,12 +12,6 @@
   <meta name="theme-color" content="#800000">
 </head>
 <body>
-  <!-- 
-    Mobile-first RTL vintage layout inspired exactly by the provided screenshot.
-    Files: index.html, styles.css, script.js
-    To use the photos you uploaded, save them as: images/dolma.jpg (first image) and images/pistachio.jpg (second image)
-  -->
-
   <header class="site-header">
     <div class="container header-inner">
       <h1 class="site-title">حلويات أبو السعود</h1>
@@ -25,7 +19,7 @@
   </header>
 
   <main>
-    <!-- Hero / Welcome (big title + small gold underline + welcome text + CTA) -->
+    <!-- Hero / Welcome -->
     <section id="home" class="hero">
       <div class="container hero-card">
         <h2 class="hero-title">حلويات أبو السعود</h2>
@@ -51,6 +45,25 @@
       </div>
     </section>
 
+    <!-- Scroll Images Section -->
+    <section id="scroll-images" class="container">
+      <h3 class="section-heading">صور مميزة من حلوياتنا</h3>
+      <p class="section-sub">استمتع بمشاهدة أشهى منتجاتنا</p>
+
+      <div class="photo-slider scroll-img">
+        <div class="slides">
+          <div class="slide"><img src="images/dolma.jpg" alt="دولمة أبو السعود"></div>
+          <div class="slide"><img src="images/pistachio.jpg" alt="بستاشيو أبو السعود"></div>
+        </div>
+        <button class="slide-btn prev">‹</button>
+        <button class="slide-btn next">›</button>
+        <div class="slide-dots">
+          <button class="dot active"></button>
+          <button class="dot"></button>
+        </div>
+      </div>
+    </section>
+
     <!-- Order / Cart -->
     <section id="order" class="order-section">
       <div class="container">
@@ -64,9 +77,7 @@
 
         <div class="order-panel">
           <div class="cart-list-wrap">
-            <ul id="cart-items" class="cart-list">
-              <!-- cart items rendered here -->
-            </ul>
+            <ul id="cart-items" class="cart-list"></ul>
             <div class="order-total">
               <span>الإجمالي</span>
               <strong id="total-price">0 ج.م</strong>
