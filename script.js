@@ -1,6 +1,7 @@
 // script.js
 // يولّد بطاقات القائمة ويُفعّل سلايدر صور لكل بطاقة (دعم أزرار + سحب باللمس)
-// تعديل: استبدال alert بإضافة للسلة + عرض toast داخل الصفحة
+// يتعامل مع RTL: يجعل الحركة بصريًا من اليمين إلى الشمال لو كانت الصفحة RTL
+// ويعرض إشعارات toast بدل alert ويحتفظ بسلة بسيطة في الذاكرة
 
 document.addEventListener('DOMContentLoaded', () => {
   // بيانات توضيحية — عدّل/أضف الصور كما تحب
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, timeout);
   }
 
-  // ======= createProductCard (كما في كودك مع تعديل إضافة للسلة) =======
+  // ======= createProductCard =======
   function createProductCard(product) {
     const frame = document.createElement('div');
     frame.className = 'card-frame';
@@ -294,4 +295,4 @@ document.addEventListener('DOMContentLoaded', () => {
   // year in footer
   const yearSpan = document.getElementById('year');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-});});
+});
