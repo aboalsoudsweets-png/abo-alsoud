@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
       desc: 'طعم أصيل ومحشي بمكونات ممتازة.',
       price: '120 ج.م',
       images: [
-        'images/dolma-1.jpg',
+        'images/dolma-3.jpg',
         'images/dolma-2.jpg',
-        'images/dolma-3.jpg'
+        'images/dolma-1.jpg'
       ]
     },
     {
