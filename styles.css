@@ -393,14 +393,7 @@ body{
   .photo-slider .slide{ height:260px; }
 }
 
-/* ======== نصائح: لو كان لديك قواعد عامة تؤثر على img أو .slide
-   مثل "img { position: absolute }" أو "img { display: inline-block }",
-   فهذه قد تتداخل مع السلايدر. في هذه الحالة ضع قواعد أكثر تحديدًا
-   أو علّق القواعد المتعارضة. ======== */
-
-/* أضف هذا الجزء إلى نهاية ملف styles.css */
-
-/* toast (non-blocking notification) */
+/* ======== toast (non-blocking notification) ======== */
 .site-toast{
   position: fixed;
   left: 50%;
@@ -421,3 +414,8 @@ body{
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ======== نصائح: لو كان لديك قواعد عامة تؤثر على img أو .slide
+   مثل "img { position: absolute }" أو "img { display: inline-block }",
+   فهذه قد تتداخل مع السلايدر. في هذه الحالة ضع قواعد أكثر تحديدًا
+   أو علّق القواعد المتعارضة. ======== */
