@@ -220,79 +220,221 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // disable buttons at ends
         prevBtn.disabled = (index === 0);
-        nextBtn.disabled = (index === total - 1);
-      };
+// script.js
+// سلايدر صور + سلة طلبات كاملة (إضافة / حذف / إجمالي)
+// RTL friendly + Toast notifications
+// Compatible with GitHub Pages
 
-      prevBtn.addEventListener('click', () => update(index - 1));
-      nextBtn.addEventListener('click', () => update(index + 1));
+document.addEventListener('DOMContentLoaded', () => {
 
-      // dots click (delegation)
-      dots.addEventListener('click', (e) => {
-        const btn = e.target;
-        if (btn && btn.classList.contains('dot')) {
-          const idx = Number(btn.getAttribute('data-idx'));
-          update(idx);
-        }
-      });
+  /* ================== PRODUCTS ================== */
+  const products = [
+    {
+      id: 'dolma',
+      title: 'محشي العثماني',
+      desc: 'طعم أصيل ومحشي بمكونات ممتازة.',
+      price: '120 ج.م',
+      images: ['images/dolma-1.jpg', 'images/dolma-2.jpg']
+    },
+    {
+      id: 'pistachio',
+      title: 'بستاشيو فاخر',
+      desc: 'قوام كريمي ومكسرات مختارة.',
+      price: '95 ج.م',
+      images: ['images/pistachio-1.jpg', 'images/pistachio-2.jpg']
+    }
+  ];
 
-      // touch swipe
-      let startX = 0;
-      let deltaX = 0;
-      slides.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        slides.style.transition = 'none';
-      }, {passive:true});
+  const menuGrid = document.getElementById('menu-grid');
+  const cartList = document.getElementById('cart-items');
+  const emptyCartPanel = document.querySelector('.cart-panel');
+  const totalPriceEl = document.getElementById('total-price');
 
-      slides.addEventListener('touchmove', (e) => {
-        deltaX = e.touches[0].clientX - startX;
-        // percent موجب لو السحب لليمين، سالب لو لليسار
-        const percent = deltaX / slider.clientWidth * 100;
-        const base = isRTL ? index * 100 : -index * 100;
-        // أثناء السحب نعرض تحريك نسبي (في RTL الإشارة تظهر معكوسة بصرياً)
-        slides.style.transform = `translateX(calc(${base}% + ${percent}%))`;
-      }, {passive:true});
+  /* ================== CART ================== */
+  const cart = [];
 
-      slides.addEventListener('touchend', () => {
-        // رجّع transition المحدد
-        slides.style.transition = DEFAULT_TRANSITION;
-        if (Math.abs(deltaX) > 40) {
-          // المعنى: في LTR سحب لليسار (deltaX < 0) => next
-          // في RTL نعكس المعنى لأن التمرير البصري معكوس
-          if (deltaX < 0) update(index + (isRTL ? -1 : 1));
-          else update(index + (isRTL ? 1 : -1));
-        } else {
-          update(index); // snap back
-        }
-        startX = 0;
-        deltaX = 0;
+  const parsePrice = (str) =>
+    Number(str.replace(/[^\d]/g, '')) || 0;
+
+  function addToCart(product) {
+    const found = cart.find(i => i.id === product.id);
+    if (found) {
+      found.qty += 1;
+    } else {
+      cart.push({
+        id: product.id,
+        title: product.title,
+        price: parsePrice(product.price),
+        qty: 1
       });
     }
+    updateCartUI();
+  }
+
+  function removeFromCart(id) {
+    const index = cart.findIndex(i => i.id === id);
+    if (index !== -1) cart.splice(index, 1);
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    cartList.innerHTML = '';
+
+    if (cart.length === 0) {
+      emptyCartPanel.style.display = 'flex';
+      totalPriceEl.textContent = '0 ج.م';
+      return;
+    }
+
+    emptyCartPanel.style.display = 'none';
+
+    let total = 0;
+
+    cart.forEach(item => {
+      const itemTotal = item.price * item.qty;
+      total += itemTotal;
+
+      const li = document.createElement('li');
+      li.className = 'cart-item';
+      li.innerHTML = `
+        <span>
+          <strong>${item.title}</strong>
+          <small> × ${item.qty}</small>
+        </span>
+        <div class="cart-actions">
+          <span>${itemTotal} ج.م</span>
+          <button class="remove-btn" title="حذف">✕</button>
+        </div>
+      `;
+
+      li.querySelector('.remove-btn')
+        .addEventListener('click', () => removeFromCart(item.id));
+
+      cartList.appendChild(li);
+    });
+
+    totalPriceEl.textContent = `${total} ج.م`;
+  }
+
+  /* ================== TOAST ================== */
+  function showToast(text, timeout = 2000) {
+    const toast = document.createElement('div');
+    toast.className = 'site-toast';
+    toast.textContent = text;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add('show'));
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 300);
+    }, timeout);
+  }
+
+  /* ================== PRODUCT CARD ================== */
+  function createProductCard(product) {
+    const frame = document.createElement('div');
+    frame.className = 'card-frame';
+
+    const card = document.createElement('article');
+    card.className = 'card';
+    frame.appendChild(card);
+
+    /* ---------- Slider ---------- */
+    const slider = document.createElement('div');
+    slider.className = 'photo-slider';
+
+    const slides = document.createElement('div');
+    slides.className = 'slides';
+
+    product.images.forEach(src => {
+      const img = document.createElement('img');
+      img.className = 'slide';
+      img.src = src;
+      img.alt = product.title;
+      img.loading = 'lazy';
+      slides.appendChild(img);
+    });
+
+    slider.appendChild(slides);
+
+    if (product.images.length > 1) {
+      let index = 0;
+      const total = product.images.length;
+      const isRTL = getComputedStyle(document.body).direction === 'rtl';
+
+      const prev = document.createElement('button');
+      const next = document.createElement('button');
+
+      prev.className = 'slide-btn prev';
+      next.className = 'slide-btn next';
+      prev.textContent = '‹';
+      next.textContent = '›';
+
+      slider.append(prev, next);
+
+      const update = (i) => {
+        index = Math.max(0, Math.min(total - 1, i));
+        const offset = isRTL ? index * 100 : -index * 100;
+        slides.style.transform = `translateX(${offset}%)`;
+        prev.disabled = index === 0;
+        next.disabled = index === total - 1;
+      };
+
+      prev.onclick = () => update(index - 1);
+      next.onclick = () => update(index + 1);
+
+      update(0);
+    }
+
+    card.appendChild(slider);
+
+    /* ---------- Card Body ---------- */
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    body.innerHTML = `
+      <h3 class="card-title">${product.title}</h3>
+      <p class="card-desc">${product.desc}</p>
+      <div class="card-price">${product.price}</div>
+    `;
+
+    const actions = document.createElement('div');
+    actions.className = 'card-actions';
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-btn';
+    addBtn.textContent = 'أضف إلى السلة';
+
+    addBtn.addEventListener('click', () => {
+      addToCart(product);
+      showToast(`${product.title} أُضيفت إلى السلة`);
+    });
+
+    actions.appendChild(addBtn);
+    body.appendChild(actions);
+    card.appendChild(body);
 
     return frame;
   }
 
-  // render all products
+  /* ================== RENDER ================== */
   products.forEach(p => {
-    const card = createProductCard(p);
-    menuGrid.appendChild(card);
+    menuGrid.appendChild(createProductCard(p));
   });
 
-  // CTA scroll to menu
+  /* ================== SCROLL CTA ================== */
   const scrollBtn = document.getElementById('scroll-to-menu');
   const menuEl = document.getElementById('menu');
 
   if (scrollBtn && menuEl) {
     scrollBtn.addEventListener('click', () => {
-      const isRTL = getComputedStyle(document.body).direction === 'rtl';
-      menuEl.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-        inline: isRTL ? 'end' : 'start'
-      });
+      menuEl.scrollIntoView({ behavior: 'smooth' });
     });
   }
 
-  // year in footer
-  const yearSpan = document.getElementById('year');
-  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+  /* ================== FOOTER YEAR ================== */
+  const year = document.getElementById('year');
+  if (year) year.textContent = new Date().getFullYear();
+
 });
