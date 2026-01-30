@@ -333,6 +333,7 @@ body{
 }
 
 /* أزرار prev/next */
+/* استخدمنا خصائص منطقية بدل left/right حتى تتوافق تلقائياً مع اتجاه الصفحة */
 .photo-slider .slide-btn{
   position: absolute;
   top: 50%;
@@ -354,9 +355,9 @@ body{
 }
 .photo-slider .slide-btn:active{ transform: translateY(-48%); }
 
-/* RTL: السابق على اليمين */
-.photo-slider .slide-btn.prev{ right: 10px; }
-.photo-slider .slide-btn.next{ left: 10px; }
+/* RTL-aware positioning: السابق على الـ inline-end، التالي على الـ inline-start */
+.photo-slider .slide-btn.prev{ inset-inline-end: 10px; }
+.photo-slider .slide-btn.next{ inset-inline-start: 10px; }
 
 .photo-slider .slide-btn[disabled]{
   opacity:0.4;
