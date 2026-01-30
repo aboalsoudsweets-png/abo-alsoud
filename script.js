@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       images: [
         'images/dolma-1.jpg',
         'images/dolma-2.jpg'
+        'images/dolma-3.jpg'
       ]
     },
     {
