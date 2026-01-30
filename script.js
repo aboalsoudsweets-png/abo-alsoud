@@ -388,53 +388,135 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     card.appendChild(slider);
+document.addEventListener('DOMContentLoaded', () => {
 
-    /* ---------- Card Body ---------- */
-    const body = document.createElement('div');
-    body.className = 'card-body';
+  const products = [
+    {
+      id:'dolma',
+      title:'محشي العثماني',
+      desc:'طعم أصيل ومحشي بمكونات ممتازة.',
+      price:'120 ج.م',
+      images:['images/dolma-1.jpg','images/dolma-2.jpg']
+    },
+    {
+      id:'pistachio',
+      title:'بستاشيو فاخر',
+      desc:'قوام كريمي ومكسرات مختارة.',
+      price:'95 ج.م',
+      images:['images/pistachio-1.jpg','images/pistachio-2.jpg']
+    }
+  ];
 
-    body.innerHTML = `
-      <h3 class="card-title">${product.title}</h3>
-      <p class="card-desc">${product.desc}</p>
-      <div class="card-price">${product.price}</div>
-    `;
+  const menuGrid=document.getElementById('menu-grid');
+  const cartList=document.getElementById('cart-items');
+  const emptyCart=document.querySelector('.cart-panel');
+  const totalPrice=document.getElementById('total-price');
 
-    const actions = document.createElement('div');
-    actions.className = 'card-actions';
+  const cart=[];
 
-    const addBtn = document.createElement('button');
-    addBtn.className = 'add-btn';
-    addBtn.textContent = 'أضف إلى السلة';
+  const parsePrice=str=>Number(str.replace(/[^\d]/g,''))||0;
 
-    addBtn.addEventListener('click', () => {
-      addToCart(product);
-      showToast(`${product.title} أُضيفت إلى السلة`);
+  function updateCart(){
+    cartList.innerHTML='';
+    if(cart.length===0){
+      emptyCart.style.display='flex';
+      totalPrice.textContent='0 ج.م';
+      return;
+    }
+    emptyCart.style.display='none';
+
+    let total=0;
+    cart.forEach(item=>{
+      const sum=item.price*item.qty;
+      total+=sum;
+
+      const li=document.createElement('li');
+      li.className='cart-item';
+      li.innerHTML=`
+        <span>${item.title} × ${item.qty}</span>
+        <div class="cart-actions">
+          <span>${sum} ج.م</span>
+          <button class="remove-btn">✕</button>
+        </div>
+      `;
+      li.querySelector('.remove-btn').onclick=()=>{
+        cart.splice(cart.indexOf(item),1);
+        updateCart();
+      };
+      cartList.appendChild(li);
     });
 
-    actions.appendChild(addBtn);
-    body.appendChild(actions);
+    totalPrice.textContent=`${total} ج.م`;
+  }
+
+  function addToCart(product){
+    const found=cart.find(i=>i.id===product.id);
+    if(found) found.qty++;
+    else cart.push({
+      id:product.id,
+      title:product.title,
+      price:parsePrice(product.price),
+      qty:1
+    });
+    updateCart();
+    toast(`${product.title} أُضيفت إلى السلة`);
+  }
+
+  function toast(text){
+    const t=document.createElement('div');
+    t.className='site-toast';
+    t.textContent=text;
+    document.body.appendChild(t);
+    requestAnimationFrame(()=>t.classList.add('show'));
+    setTimeout(()=>{t.remove()},2000);
+  }
+
+  function createCard(p){
+    const frame=document.createElement('div');
+    frame.className='card-frame';
+
+    const card=document.createElement('div');
+    card.className='card';
+
+    const slider=document.createElement('div');
+    slider.className='photo-slider';
+
+    const slides=document.createElement('div');
+    slides.className='slides';
+
+    p.images.forEach(src=>{
+      const img=document.createElement('img');
+      img.src=src;
+      img.className='slide';
+      slides.appendChild(img);
+    });
+
+    slider.appendChild(slides);
+    card.appendChild(slider);
+
+    const body=document.createElement('div');
+    body.className='card-body';
+    body.innerHTML=`
+      <h3 class="card-title">${p.title}</h3>
+      <p class="card-desc">${p.desc}</p>
+      <div class="card-price">${p.price}</div>
+    `;
+
+    const btn=document.createElement('button');
+    btn.className='add-btn';
+    btn.textContent='أضف إلى السلة';
+    btn.onclick=()=>addToCart(p);
+
+    body.appendChild(btn);
     card.appendChild(body);
+    frame.appendChild(card);
 
     return frame;
   }
 
-  /* ================== RENDER ================== */
-  products.forEach(p => {
-    menuGrid.appendChild(createProductCard(p));
+  products.forEach(p=>{
+    menuGrid.appendChild(createCard(p));
   });
 
-  /* ================== SCROLL CTA ================== */
-  const scrollBtn = document.getElementById('scroll-to-menu');
-  const menuEl = document.getElementById('menu');
-
-  if (scrollBtn && menuEl) {
-    scrollBtn.addEventListener('click', () => {
-      menuEl.scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
-  /* ================== FOOTER YEAR ================== */
-  const year = document.getElementById('year');
-  if (year) year.textContent = new Date().getFullYear();
-
+  document.getElementById('year').textContent=new Date().getFullYear();
 });
