@@ -404,18 +404,252 @@ body{
   padding: 10px 18px;
   border-radius: 22px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 220ms ease, transform 220ms ease;
-  font-weight: 700;
-  pointer-events: none;
-}
-.site-toast.show{
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+/* styles.css
+   تصميم كلاسيكي/فينتاج - RTL - موبايل في المقدمة
+   الألوان: مارون #800000 و ذهبي #FFD700
+   الخطوط: Amiri + Cairo
+*/
+
+/* ================= Variables ================= */
+:root{
+  --maroon: #800000;
+  --gold: #FFD700;
+  --ivory: #fbf6f0;
+  --panel: rgba(255,255,250,0.9);
+  --muted: #7a4a4a;
 }
 
-/* ======== نصائح: لو كان لديك قواعد عامة تؤثر على img أو .slide
-   مثل "img { position: absolute }" أو "img { display: inline-block }",
-   فهذه قد تتداخل مع السلايدر. في هذه الحالة ضع قواعد أكثر تحديدًا
-   أو علّق القواعد المتعارضة. ======== */
+/* ================= Reset + Base ================= */
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  margin:0;
+  font-family:"Cairo","Amiri",system-ui,sans-serif;
+  direction:rtl;
+  background-color:var(--ivory);
+  color:var(--maroon);
+  -webkit-font-smoothing:antialiased;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><g fill='%23f6efe9'><path d='M100 0c8 14 24 18 24 34 0 20-20 22-24 46-4-24-24-26-24-46 0-16 16-20 24-34z'/></g></svg>");
+  background-repeat:repeat;
+  background-size:220px 220px;
+}
+
+/* ================= Layout ================= */
+.container{
+  max-width:980px;
+  margin:auto;
+  padding:0 1rem;
+}
+
+/* ================= Header ================= */
+.site-header{
+  padding:1rem 0 .4rem;
+  text-align:center;
+}
+.site-title{
+  margin:0;
+  font-family:"Amiri",serif;
+  font-size:2.1rem;
+}
+
+/* ================= Hero ================= */
+.hero{padding:1rem 0 2rem}
+.hero-card{
+  text-align:center;
+  padding:2.2rem 1rem;
+  background:linear-gradient(0deg,rgba(255,255,250,.85),rgba(255,255,250,.95));
+  border-radius:8px;
+}
+.hero-title{
+  font-family:"Amiri",serif;
+  font-size:2.6rem;
+  margin:0;
+}
+.hero-underline{
+  width:70px;
+  height:6px;
+  background:var(--gold);
+  margin:.5rem auto;
+  border-radius:4px;
+}
+.hero-desc{color:#6b3a3a}
+
+/* ================= Buttons ================= */
+.btn{
+  border:none;
+  cursor:pointer;
+  font-weight:700;
+  border-radius:28px;
+  padding:.6rem 1.2rem;
+  background:var(--maroon);
+  color:#fff;
+  box-shadow:0 6px 0 rgba(128,0,0,.15);
+}
+.btn:active{transform:translateY(2px)}
+
+.add-btn{
+  padding:.5rem 1.1rem;
+  border-radius:28px;
+}
+
+/* ================= Menu ================= */
+.menu-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:1rem;
+}
+
+.card-frame{
+  border-radius:12px;
+  padding:6px;
+  border:2px solid var(--gold);
+}
+
+.card{
+  background:#fff;
+  border-radius:10px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  min-height:420px;
+}
+
+.card-body{
+  padding:1rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.card-title{font-weight:800}
+.card-desc{color:#6b3a3a}
+.card-price{font-weight:900}
+
+/* ================= Slider ================= */
+.photo-slider{
+  position:relative;
+  overflow:hidden;
+  background:#f3e8e2;
+}
+.photo-slider .slides{
+  display:flex;
+  transition:transform .35s ease;
+}
+.photo-slider .slide{
+  flex:0 0 100%;
+  min-width:100%;
+  height:220px;
+  object-fit:cover;
+}
+.photo-slider img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  pointer-events:none;
+}
+
+.slide-btn{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  border:none;
+  background:rgba(0,0,0,.06);
+  color:#fff;
+}
+.slide-btn.prev{inset-inline-end:10px}
+.slide-btn.next{inset-inline-start:10px}
+
+.slide-dots{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:6px;
+}
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:rgba(255,255,255,.6);
+}
+.dot.active{background:var(--maroon)}
+
+/* ================= Cart ================= */
+.cart-panel{
+  margin:1rem 0;
+  padding:1rem;
+  border-radius:10px;
+  background:rgba(255,255,250,.85);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.6rem;
+}
+
+.cart-list{list-style:none;padding:0;margin:0}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:.6rem 0;
+  border-bottom:1px dashed rgba(128,0,0,.08);
+}
+
+.cart-actions{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+}
+
+.remove-btn{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:none;
+  background:rgba(128,0,0,.1);
+  color:var(--maroon);
+  cursor:pointer;
+}
+.remove-btn:active{transform:scale(.9)}
+
+.order-total{
+  display:flex;
+  justify-content:space-between;
+  font-weight:900;
+}
+
+/* ================= Form ================= */
+.customer-form{display:flex;flex-direction:column;gap:.7rem}
+.field input,.field textarea{
+  padding:.6rem;
+  border-radius:8px;
+  border:1px solid rgba(128,0,0,.1);
+}
+
+/* ================= Toast ================= */
+.site-toast{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--maroon);
+  color:#fff;
+  padding:10px 18px;
+  border-radius:22px;
+  opacity:0;
+  transition:.2s;
+  z-index:9999;
+}
+.site-toast.show{opacity:1}
+
+/* ================= Responsive ================= */
+@media(min-width:700px){
+  .menu-grid{grid-template-columns:repeat(2,1fr)}
+  .photo-slider .slide{height:260px}
+}
