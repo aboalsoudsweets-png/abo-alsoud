@@ -1,6 +1,6 @@
 // script.js
 // يولّد بطاقات القائمة ويُفعّل سلايدر صور لكل بطاقة (دعم أزرار + سحب باللمس)
-// يتعامل مع RTL: يجعل الحركة بصريًا من اليمين إلى الشمال لو كانت الصفحة RTL
+// تعديل: استبدال alert بإضافة للسلة + عرض toast داخل الصفحة
 
 document.addEventListener('DOMContentLoaded', () => {
   // بيانات توضيحية — عدّل/أضف الصور كما تحب
@@ -35,6 +35,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const CACHE_BUST = false; // ضع true أثناء التطوير لو تُحدّث الصور بنفس الاسم
   const DEFAULT_TRANSITION = 'transform 300ms ease';
 
+  // ======= Simple cart (in-memory) =======
+  const cart = [];
+
+  function addToCart(product) {
+    const existing = cart.find(item => item.id === product.id);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        qty: 1
+      });
+    }
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const cartList = document.querySelector('.cart-list');
+    if (!cartList) return; // إذا ماعندك قائمة في الـ HTML تجاهل
+    cartList.innerHTML = cart.map(item => {
+      return `<li class="cart-item" data-id="${item.id}">
+        <strong>${item.title}</strong> <span class="cart-qty">x${item.qty}</span>
+        <div class="cart-price">${item.price}</div>
+      </li>`;
+    }).join('');
+  }
+
+  // toast (non-blocking notification)
+  function showToast(text, timeout = 2000) {
+    let toast = document.createElement('div');
+    toast.className = 'site-toast';
+    toast.textContent = text;
+    document.body.appendChild(toast);
+    // force reflow then show
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+      toast.classList.remove('show');
+      // إزالة بعد انتهاء الإخفاء
+      setTimeout(() => toast.remove(), 300);
+    }, timeout);
+  }
+
+  // ======= createProductCard (كما في كودك مع تعديل إضافة للسلة) =======
   function createProductCard(product) {
     const frame = document.createElement('div');
     frame.className = 'card-frame';
@@ -133,9 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
     addBtn.className = 'add-btn';
     addBtn.type = 'button';
     addBtn.innerText = 'أضف إلى السلة';
+    // <-- هنا بدل alert نستخدم addToCart + showToast
     addBtn.addEventListener('click', () => {
-      // هنا تضع المنطق لإضافة المنتج للسلة
-      alert(`${product.title} أُضيفت إلى السلة (مثال).`);
+      addToCart(product);
+      showToast(`${product.title} أُضيفت إلى السلة`);
     });
 
     actions.appendChild(addBtn);
@@ -248,4 +294,4 @@ document.addEventListener('DOMContentLoaded', () => {
   // year in footer
   const yearSpan = document.getElementById('year');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-});
+});});
