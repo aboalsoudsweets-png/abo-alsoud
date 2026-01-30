@@ -1,692 +1,82 @@
-/* styles.css
-   تصميم مشابه تماماً للصورة المرسلة (نمط كلاسيكي/فينتاج - RTL - موبايل في المقدمة)
-   ملاحظات:
-    - الألوان الأساسية: مارون #800000 و ذهبي #FFD700
-    - استخدام خطوط Amiri (عنوان) و Cairo (نص)
-*/
 
-/* Variables */
-:root{
-  --maroon: #800000;
-  --gold: #FFD700;
-  --ivory: #fbf6f0;
-  --panel: rgba(255,255,250,0.9);
-  --muted: #7a4a4a;
-}
-
-/* Reset + base */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: "Cairo", "Amiri", system-ui, sans-serif;
-  direction: rtl;
-  background-color: var(--ivory);
-  color: var(--maroon);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  /* subtle vintage damask pattern (SVG data URL) */
-  background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><g fill='%23f6efe9' fill-opacity='1'><path d='M100 0c8 14 24 18 24 34 0 20-20 22-24 46-4-24-24-26-24-46 0-16 16-20 24-34z'/></g></svg>");
-  background-repeat: repeat;
-  background-size: 220px 220px;
-}
-
-/* Container */
-.container{
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* Header */
-.site-header{
-  padding: 1.1rem 0 0.4rem;
-  text-align:center;
-}
-.site-title{
-  margin:0;
-  color: var(--maroon);
-  font-family: "Amiri", serif;
-  font-size: 2.1rem;
-  letter-spacing: 1px;
-}
-
-/* HERO */
-.hero{
-  padding: 1rem 0 2rem;
-}
-.hero-card{
-  text-align:center;
-  padding: 2.2rem 1rem 2.6rem;
-  background: linear-gradient(0deg, rgba(255,255,250,0.85), rgba(255,255,250,0.95));
-  border-radius: 8px;
-  border: 1px solid rgba(128,0,0,0.06);
-  margin-bottom: 1rem;
-}
-.hero-title{
-  font-family: "Amiri", serif;
-  font-size: 2.6rem;
-  margin: 0 0 0.35rem 0;
-  color: var(--maroon);
-}
-.hero-underline{
-  width: 70px;
-  height: 6px;
-  background: var(--gold);
-  margin: 0.45rem auto;
-  border-radius: 4px;
-  box-shadow: 0 2px 0 rgba(0,0,0,0.03) inset;
-}
-.hero-sub{
-  margin: 0.4rem 0 0;
-  font-weight: 700;
-  color: var(--maroon);
-}
-.hero-desc{
-  margin: 0.25rem 0 1rem;
-  color: #6b3a3a;
-  opacity: 0.95;
-}
-
-/* CTA button (rounded deep maroon like screenshot) */
-.btn{
-  display:inline-block;
-  border: none;
-  cursor: pointer;
-  font-weight:700;
-  border-radius: 28px;
-  padding: 0.6rem 1.2rem;
-  color: #fff;
-  background: var(--maroon);
-  box-shadow: 0 6px 0 rgba(128,0,0,0.15);
-  transform: translateY(0);
-}
-.btn:active{ transform: translateY(2px); box-shadow: 0 4px 0 rgba(0,0,0,0.08) }
-.cta-btn{
-  background: var(--maroon);
-  border: 2px solid rgba(0,0,0,0.06);
-  color: #fff;
-}
-
-/* Section headings */
-.section-heading{
-  text-align:center;
-  font-family: "Amiri", serif;
-  font-size: 1.3rem;
-  color: var(--maroon);
-  margin: 1.2rem 0 0.2rem;
-}
-.section-sub{
-  text-align:center;
-  color:#7b4747;
-  margin: 0 0 1rem;
-}
-
-/* MENU GRID (mobile: single column, desktop: 2 columns like screenshot) */
-.menu-grid{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Card outer gold frame */
-.card-frame{
-  border-radius: 12px;
-  padding: 6px;
-  background: linear-gradient(180deg, rgba(255,215,0,0.05), rgba(255,215,0,0.02));
-  border: 2px solid var(--gold);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-}
-
-/* Card inner white panel */
-.card{
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  min-height: 420px; /* similar height to screenshot */
-}
-
-/* Image at top (legacy single-image styling kept as fallback) */
-.card .photo{
-  width:100%;
-  height: 220px;
-  object-fit:cover;
-  display:block;
-  background: #f3eae0;
-}
-
-/* Card content area */
-.card-body{
-  padding: 1rem;
-  display:flex;
-  flex-direction:column;
-  justify-content: space-between;
-  flex:1;
-}
-.card-title{
-  color: var(--maroon);
-  font-weight:800;
-  font-size:1.05rem;
-  margin:0 0 0.4rem;
-  text-align:right;
-}
-.card-desc{
-  color:#6b3a3a;
-  margin:0 0 0.6rem;
-  line-height:1.3;
-  font-size:0.95rem;
-  min-height: 56px;
-}
-.card-price{
-  color: var(--maroon);
-  font-weight:900;
-  font-size:1.05rem;
-  margin-bottom: 0.6rem;
-}
-
-/* action area: rounded button centered like screenshot */
-.card-actions{
-  display:flex;
-  justify-content:center;
-  gap:0.6rem;
-  align-items:center;
-}
-.add-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:0.5rem;
-  padding:0.5rem 1.1rem;
-  background: var(--maroon);
-  color:#fff;
-  border-radius: 28px;
-  border: 2px solid rgba(0,0,0,0.06);
-  box-shadow: 0 6px 0 rgba(128,0,0,0.12);
-}
-
-/* Order / Cart area */
-.cart-panel{
-  margin: 1rem 0;
-  border-radius: 10px;
-  padding: 1.2rem;
-  background: linear-gradient(180deg, rgba(255,255,250,0.6), rgba(255,255,250,0.9));
-  border: 1px dashed rgba(128,0,0,0.08);
-  text-align:center;
-  display:flex;
-  gap: 0.8rem;
-  align-items:center;
-  justify-content:center;
-}
-.cart-icon{ font-size: 1.8rem; opacity:0.6 }
-.cart-note{ color:#7b4a4a; margin:0.2rem 0 0 }
-
-/* Order panel (form + cart list) */
-.order-panel{
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  margin-bottom:2rem;
-}
-.cart-list{ list-style:none; padding:0; margin:0 }
-.order-total{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0.6rem 0;
-  border-top:1px dashed rgba(128,0,0,0.06);
-  margin-top:0.6rem;
-}
-
-/* Customer form */
-.customer-form{ display:flex; flex-direction:column; gap:0.7rem }
-.field span{ display:block; font-size:0.92rem; color:#6b3a3a; margin-bottom:0.25rem }
-.field input, .field textarea{
-  width:100%;
-  padding:0.6rem;
-  border-radius:8px;
-  border:1px solid rgba(128,0,0,0.08);
-  font-size:0.95rem;
-  font-family: inherit;
-}
-.place-btn{ background: #b20000; }
-
-/* Contact card */
-.contact-card{
-  padding: 1rem;
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,250,0.85), rgba(255,255,250,0.95));
-  border: 1px solid rgba(128,0,0,0.05);
-  margin-bottom: 2rem;
-}
-
-/* Footer */
-.site-footer{
-  padding:1rem 0;
-  text-align:center;
-  color:#6b3a3a;
-  font-size:0.9rem;
-}
-
-/* Responsive breakpoints */
-@media (min-width:700px){
-  .menu-grid{ grid-template-columns: repeat(2,1fr) }
-  .hero-title{ font-size:3.2rem }
-  .card{ min-height: 480px }
-  .card .photo{ height: 260px }
-  .order-panel{ flex-direction:row; gap:1.2rem }
-  .cart-list-wrap{ flex:1 }
-  .customer-form{ width: 360px }
-}
-
-/* --- إضافات السلايدر للصور متعددة --- */
-/* ======= التعديلات الأساسية هنا =======
-   - جعل .slides مرنًا (flex) مع عرض مستقل لكل شريحة
-   - ضمان min-width:100% لكل شريحة (بعض المتصفحات تحتاجها)
-   - التأكد من أن الصور داخل الشريحة تشغل 100% عرض/ارتفاع الشريحة
-   - ضبط transition بشكل واضح وإعادة تفعيله بعد touchend
-   - حماية من قواعد CSS خارجية (عن طريق scoping باستخدام .photo-slider)
-*/
-
-.photo-slider{
-  position: relative;
-  overflow: hidden;
-  background: #f3e8e2;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  width: 100%;
-}
-
-/* slides container: كل الشايلات جنب بعض بفضل flex */
-.photo-slider .slides{
-  display:flex;
-  width:100%;
-  transition: transform 0.35s ease;
-  will-change: transform;
-  align-items: stretch; /* يضمن أن الصور تمتد للارتفاع المحدد */
-  gap: 0; /* لا فجوات بين الشرائح */
-}
-
-/* كل slide يحتل 100% من عرض الحاوية */
-.photo-slider .slide{
-  box-sizing: border-box;
-  flex: 0 0 100%;
-  min-width: 100%;
-  max-width: 100%;
-  height:220px; /* ارتفاع افتراضي - يتغير عند الميديا كويري */
-  display:block;
-  object-fit: cover;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-/* تأكد أن العنصر img يملأ الشريحة تمامًا (بعض المتصفحات تتطلب هذا) */
-.photo-slider .slides img{
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none; /* يسمح بالتعامل مع الـ touch على الحاوية بدلًا من الصورة */
-}
-
-/* أزرار prev/next */
-/* استخدمنا خصائص منطقية بدل left/right حتى تتوافق تلقائياً مع اتجاه الصفحة */
-.photo-slider .slide-btn{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: rgba(0,0,0,0.06);
-  color: #fff;
-  border: none;
-  width:38px;
-  height:38px;
-  border-radius: 50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.2rem;
-  cursor:pointer;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.06);
-  transition: transform 120ms ease;
-}
-.photo-slider .slide-btn:active{ transform: translateY(-48%); }
-
-/* RTL-aware positioning: السابق على الـ inline-end، التالي على الـ inline-start */
-.photo-slider .slide-btn.prev{ inset-inline-end: 10px; }
-.photo-slider .slide-btn.next{ inset-inline-start: 10px; }
-
-.photo-slider .slide-btn[disabled]{
-  opacity:0.4;
-  pointer-events:none;
-}
-
-/* نقاط التصفح */
-.photo-slider .slide-dots{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:10px;
-  display:flex;
-  gap:8px;
-  z-index:12;
-}
-.photo-slider .dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  border:none;
-  background: rgba(255,255,255,0.6);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.06) inset;
-  cursor:pointer;
-}
-.photo-slider .dot.active{
-  background: var(--maroon);
-  box-shadow: 0 4px 0 rgba(128,0,0,0.12);
-}
-
-/* تكيّف الطول على الشاشات الكبيرة */
-@media (min-width:700px){
-  .photo-slider .slide{ height:260px; }
-}
-
-/* ======== toast (non-blocking notification) ======== */
-.site-toast{
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%) translateY(12px);
-  bottom: 20px;
-  background: var(--maroon);
-  color: #fff;
-  padding: 10px 18px;
-  border-radius: 22px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-/* styles.css
-   تصميم كلاسيكي/فينتاج - RTL - موبايل في المقدمة
-   الألوان: مارون #800000 و ذهبي #FFD700
-   الخطوط: Amiri + Cairo
-*/
-
-/* ================= Variables ================= */
-:root{
-  --maroon: #800000;
-  --gold: #FFD700;
-  --ivory: #fbf6f0;
-  --panel: rgba(255,255,250,0.9);
-  --muted: #7a4a4a;
-}
-
-/* ================= Reset + Base ================= */
-*{box-sizing:border-box}
-html,body{height:100%}
-
-body{
-  margin:0;
-  font-family:"Cairo","Amiri",system-ui,sans-serif;
-  direction:rtl;
-  background-color:var(--ivory);
-  color:var(--maroon);
-  -webkit-font-smoothing:antialiased;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><g fill='%23f6efe9'><path d='M100 0c8 14 24 18 24 34 0 20-20 22-24 46-4-24-24-26-24-46 0-16 16-20 24-34z'/></g></svg>");
-  background-repeat:repeat;
-  background-size:220px 220px;
-}
-
-/* ================= Layout ================= */
-.container{
-  max-width:980px;
-  margin:auto;
-  padding:0 1rem;
-}
-
-/* ================= Header ================= */
-.site-header{
-  padding:1rem 0 .4rem;
-  text-align:center;
-}
-.site-title{
-  margin:0;
-  font-family:"Amiri",serif;
-  font-size:2.1rem;
-}
-
-/* ================= Hero ================= */
-.hero{padding:1rem 0 2rem}
-.hero-card{
-  text-align:center;
-  padding:2.2rem 1rem;
-  background:linear-gradient(0deg,rgba(255,255,250,.85),rgba(255,255,250,.95));
-  border-radius:8px;
-}
-.hero-title{
-  font-family:"Amiri",serif;
-  font-size:2.6rem;
-  margin:0;
-}
-.hero-underline{
-  width:70px;
-  height:6px;
-  background:var(--gold);
-  margin:.5rem auto;
-  border-radius:4px;
-}
-.hero-desc{color:#6b3a3a}
-
-/* ================= Buttons ================= */
-.btn{
-  border:none;
-  cursor:pointer;
-  font-weight:700;
-  border-radius:28px;
-  padding:.6rem 1.2rem;
-  background:var(--maroon);
-  color:#fff;
-  box-shadow:0 6px 0 rgba(128,0,0,.15);
-}
-.btn:active{transform:translateY(2px)}
-
-.add-btn{
-  padding:.5rem 1.1rem;
-  border-radius:28px;
-}
-
-/* ================= Menu ================= */
-.menu-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:1rem;
-}
-
-.card-frame{
-  border-radius:12px;
-  padding:6px;
-  border:2px solid var(--gold);
-}
-
-.card{
-  background:#fff;
-  border-radius:10px;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  min-height:420px;
-}
-
-.card-body{
-  padding:1rem;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.card-title{font-weight:800}
-.card-desc{color:#6b3a3a}
-.card-price{font-weight:900}
-
-/* ================= Slider ================= */
-.photo-slider{
-  position:relative;
-  overflow:hidden;
-  background:#f3e8e2;
-}
-.photo-slider .slides{
-  display:flex;
-  transition:transform .35s ease;
-}
-.photo-slider .slide{
-  flex:0 0 100%;
-  min-width:100%;
-  height:220px;
-  object-fit:cover;
-}
-.photo-slider img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  pointer-events:none;
-}
-
-.slide-btn{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  border:none;
-  background:rgba(0,0,0,.06);
-  color:#fff;
-}
-.slide-btn.prev{inset-inline-end:10px}
-.slide-btn.next{inset-inline-start:10px}
-
-.slide-dots{
-  position:absolute;
-  bottom:10px;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  gap:6px;
-}
-.dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:rgba(255,255,255,.6);
-}
-.dot.active{background:var(--maroon)}
-
-/* ================= Cart ================= */
-.cart-panel{
-  margin:1rem 0;
-  padding:1rem;
-  border-radius:10px;
-  background:rgba(255,255,250,.85);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:.6rem;
-}
-
-.cart-list{list-style:none;padding:0;margin:0}
-
-.cart-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:.6rem 0;
-  border-bottom:1px dashed rgba(128,0,0,.08);
-}
-
-.cart-actions{
-  display:flex;
-  align-items:center;
-  gap:.6rem;
-}
-
-.remove-btn{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-  border:none;
-  background:rgba(128,0,0,.1);
-  color:var(--maroon);
-  cursor:pointer;
-}
-.remove-btn:active{transform:scale(.9)}
-
-.order-total{
-  display:flex;
-  justify-content:space-between;
-  font-weight:900;
-}
-
-/* ================= Form ================= */
-.customer-form{display:flex;flex-direction:column;gap:.7rem}
-.field input,.field textarea{
-  padding:.6rem;
-  border-radius:8px;
-  border:1px solid rgba(128,0,0,.1);
-}
-:root{
+  
+  :root{
   --maroon:#800000;
   --gold:#FFD700;
   --ivory:#fbf6f0;
 }
 
 *{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:"Cairo","Amiri",sans-serif;
-  direction:rtl;
+  font-family:Cairo,system-ui;
   background:var(--ivory);
   color:var(--maroon);
+  direction:rtl;
 }
 
-.container{max-width:980px;margin:auto;padding:0 1rem}
+.container{
+  max-width:980px;
+  margin:auto;
+  padding:0 1rem;
+}
 
-/* HEADER */
-.site-header{text-align:center;padding:1rem 0}
-.site-title{font-family:"Amiri",serif;font-size:2.1rem}
-
-/* HERO */
-.hero-card{
+/* header */
+.site-header{
   text-align:center;
-  background:#fff;
-  padding:2rem 1rem;
-  border-radius:10px;
-  margin-bottom:1rem;
+  padding:1rem 0;
 }
-.hero-title{font-family:"Amiri",serif;font-size:2.6rem}
-.hero-underline{width:70px;height:6px;background:var(--gold);margin:.5rem auto}
+.site-title{
+  font-family:Amiri,serif;
+  font-size:2rem;
+}
 
-/* BUTTONS */
-.btn,.add-btn{
+/* hero */
+.hero-card{
+  background:#fffdf8;
+  padding:2rem 1rem;
+  text-align:center;
+  border-radius:10px;
+}
+.hero-title{
+  font-family:Amiri,serif;
+  font-size:2.5rem;
+}
+.hero-underline{
+  width:70px;
+  height:6px;
+  background:var(--gold);
+  margin:10px auto;
+  border-radius:5px;
+}
+
+.btn{
   background:var(--maroon);
   color:#fff;
   border:none;
-  border-radius:28px;
-  padding:.6rem 1.2rem;
+  padding:.6rem 1.4rem;
+  border-radius:30px;
   cursor:pointer;
   font-weight:700;
 }
 
-/* MENU */
+/* menu */
 .menu-grid{
   display:grid;
   grid-template-columns:1fr;
   gap:1rem;
+  margin:2rem 0;
 }
 
-/* ⭐ الإصلاح المهم هنا */
+@media(min-width:700px){
+  .menu-grid{grid-template-columns:repeat(2,1fr)}
+}
+
 .card-frame{
   border:2px solid var(--gold);
-  border-radius:12px;
   padding:6px;
-  background:#fff;
+  border-radius:12px;
 }
 
 .card{
@@ -697,82 +87,105 @@ body{
   flex-direction:column;
 }
 
-.card-body{
-  padding:1rem;
-  display:flex;
-  flex-direction:column;
-  gap:.4rem;
-  position:relative;
-  z-index:2;
-}
-
-.card-title{font-weight:800}
-.card-desc{color:#6b3a3a}
-.card-price{font-weight:900}
-
-/* SLIDER */
-.photo-slider{position:relative;overflow:hidden}
-.slides{display:flex;transition:transform .35s ease}
-.slide{
-  flex:0 0 100%;
+.card img{
+  width:100%;
   height:220px;
   object-fit:cover;
 }
 
-/* CART */
-.cart-panel{
-  margin:1rem 0;
+.card-body{
   padding:1rem;
-  background:#fff;
-  border-radius:10px;
+  flex:1;
+}
+
+.card-title{
+  font-weight:800;
+  margin-bottom:.3rem;
+}
+
+.card-desc{
+  font-size:.95rem;
+  color:#6b3a3a;
+}
+
+.card-price{
+  font-weight:900;
+  margin:.6rem 0;
+}
+
+.card-actions{
   text-align:center;
 }
 
-.cart-list{list-style:none;padding:0;margin:0}
+.add-btn{
+  background:var(--maroon);
+  color:#fff;
+  border:none;
+  padding:.5rem 1.2rem;
+  border-radius:25px;
+  cursor:pointer;
+}
+
+/* cart */
+.cart-panel{
+  text-align:center;
+  padding:1rem;
+  background:#fffdf8;
+  border-radius:10px;
+  margin-bottom:1rem;
+}
+
+.order-panel{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+.cart-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+}
 
 .cart-item{
   display:flex;
   justify-content:space-between;
-  padding:.5rem 0;
-  border-bottom:1px dashed rgba(0,0,0,.1);
+  align-items:center;
+  padding:.4rem 0;
 }
 
-.cart-actions{display:flex;gap:.5rem;align-items:center}
-
 .remove-btn{
+  background:#b20000;
+  color:#fff;
+  border:none;
+  border-radius:50%;
   width:26px;
   height:26px;
-  border-radius:50%;
-  border:none;
-  background:rgba(128,0,0,.1);
-  color:var(--maroon);
   cursor:pointer;
 }
 
-/* TOTAL */
 .order-total{
   display:flex;
   justify-content:space-between;
-  font-weight:900;
+  border-top:1px dashed #ccc;
+  margin-top:.5rem;
+  padding-top:.5rem;
 }
 
-/* TOAST */
-.site-toast{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:var(--maroon);
-  color:#fff;
-  padding:10px 18px;
-  border-radius:20px;
-  opacity:0;
-  transition:.2s;
+/* form */
+.customer-form{
+  display:flex;
+  flex-direction:column;
+  gap:.6rem;
 }
-.site-toast.show{opacity:1}
 
-/* RESPONSIVE */
-@media(min-width:700px){
-  .menu-grid{grid-template-columns:repeat(2,1fr)}
-  .slide{height:260px}
+.customer-form input,
+.customer-form textarea{
+  padding:.5rem;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.place-btn{
+  background:#b20000;
 }
