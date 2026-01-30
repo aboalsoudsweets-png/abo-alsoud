@@ -1,5 +1,6 @@
 // script.js
 // يولّد بطاقات القائمة ويُفعّل سلايدر صور لكل بطاقة (دعم أزرار + سحب باللمس)
+// يتعامل مع RTL: يجعل الحركة بصريًا من اليمين إلى الشمال لو كانت الصفحة RTL
 
 document.addEventListener('DOMContentLoaded', () => {
   // بيانات توضيحية — عدّل/أضف الصور كما تحب
@@ -61,7 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
       img.decoding = 'async';
       // عند فشل التحميل، ضع صورة بديلة (ضع placeholder.jpg في مجلد images)
       img.onerror = () => {
-        img.src = 'images/placeholder.jpg';
+        if (!img._triedPlaceholder) {
+          img._triedPlaceholder = true;
+          img.src = 'images/placeholder.jpg';
+        } else {
+          img.style.background = 'linear-gradient(45deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01))';
+        }
       };
       slides.appendChild(img);
     });
@@ -146,13 +152,19 @@ document.addEventListener('DOMContentLoaded', () => {
       let index = 0;
       const total = product.images.length;
 
+      // اكتشاف اتجاه الصفحة (RTL أم LTR)
+      const isRTL = getComputedStyle(document.body).direction === 'rtl';
+
       // initial state
       prevBtn.disabled = true;
       nextBtn.disabled = (total <= 1);
 
+      // update function يعكس الإزاحة بصرياً في حالة RTL
       const update = (newIndex) => {
         index = Math.max(0, Math.min(total - 1, newIndex));
-        slides.style.transform = `translateX(-${index * 100}%)`;
+        // في LTR: -index*100%, في RTL: +index*100% => الحركة تبدو من اليمين للشمال
+        const offset = isRTL ? index * 100 : -index * 100;
+        slides.style.transform = `translateX(${offset}%)`;
         slider.setAttribute('data-index', String(index));
         // update dots
         const allDots = slider.querySelectorAll('.dot');
@@ -186,16 +198,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
       slides.addEventListener('touchmove', (e) => {
         deltaX = e.touches[0].clientX - startX;
+        // percent موجب لو السحب لليمين، سالب لو لليسار
         const percent = deltaX / slider.clientWidth * 100;
-        slides.style.transform = `translateX(calc(-${index * 100}% + ${percent}%))`;
+        const base = isRTL ? index * 100 : -index * 100;
+        // أثناء السحب نعرض تحريك نسبي (في RTL الإشارة تظهر معكوسة بصرياً)
+        slides.style.transform = `translateX(calc(${base}% + ${percent}%))`;
       }, {passive:true});
 
       slides.addEventListener('touchend', () => {
         // رجّع transition المحدد
         slides.style.transition = DEFAULT_TRANSITION;
         if (Math.abs(deltaX) > 40) {
-          if (deltaX < 0) update(index + 1);
-          else update(index - 1);
+          // المعنى: في LTR سحب لليسار (deltaX < 0) => next
+          // في RTL نعكس المعنى لأن التمرير البصري معكوس
+          if (deltaX < 0) update(index + (isRTL ? -1 : 1));
+          else update(index + (isRTL ? 1 : -1));
         } else {
           update(index); // snap back
         }
@@ -215,9 +232,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // CTA scroll to menu
   const scrollBtn = document.getElementById('scroll-to-menu');
-  if (scrollBtn) {
+  const menuEl = document.getElementById('menu');
+
+  if (scrollBtn && menuEl) {
     scrollBtn.addEventListener('click', () => {
-      document.getElementById('menu').scrollIntoView({behavior: 'smooth'});
+      const isRTL = getComputedStyle(document.body).direction === 'rtl';
+      menuEl.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: isRTL ? 'end' : 'start'
+      });
     });
   }
 
