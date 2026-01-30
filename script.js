@@ -30,39 +30,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuGrid = document.getElementById('menu-grid');
   if (!menuGrid) return; // منع الأخطاء لو العنصر غير موجود
 
-  // إعدادات:
-  const CACHE_BUST = false; // ضع true أثناء التطوير لو تُحدّث الصور بنفس الاسم
-  const DEFAULT_TRANSITION = 'transform 300ms ease';
+ // تعديل صغير للتحقق من تحميل الصور وفشلها
+const CACHE_BUST = true; // فعّله مؤقتًا أثناء الفحص
 
-  function createProductCard(product) {
-    const frame = document.createElement('div');
-    frame.className = 'card-frame';
+product.images.forEach((src, i) => {
+  const img = document.createElement('img');
+  img.className = 'slide';
+  img.src = CACHE_BUST ? `${src}?v=${Date.now()}` : src;
+  img.alt = `${product.title} - صورة ${i + 1}`;
+  img.loading = 'lazy';
+  img.decoding = 'async';
 
-    const card = document.createElement('article');
-    card.className = 'card';
-    frame.appendChild(card);
+  // تتبّع التحميل/الفشل في الـ Console
+  img.onload = () => {
+    console.log('IMAGE LOADED:', img.src, img.naturalWidth, img.naturalHeight);
+  };
+  img.onerror = () => {
+    console.warn('IMAGE FAILED:', img.src);
+    // لا نعيد المحاولة إلى نفس الـ placeholder لأن قد يؤدي لحلقة
+    if (!img._triedPlaceholder) {
+      img._triedPlaceholder = true;
+      img.src = 'images/placeholder.jpg'; // تأكد أن هذه الصورة موجودة
+    } else {
+      // لو حتى placeholder مفقود، ضع حدًا مرئيًا مؤقتًا
+      img.style.background = 'linear-gradient(45deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01))';
+    }
+  };
 
-    // slider container
-    const slider = document.createElement('div');
-    slider.className = 'photo-slider';
-    slider.setAttribute('data-index', '0');
-
-    const slides = document.createElement('div');
-    slides.className = 'slides';
-    slides.style.transition = DEFAULT_TRANSITION; // تأكد من وجود transition افتراضي
-
-    product.images.forEach((src, i) => {
-      const img = document.createElement('img');
-      img.className = 'slide';
-      // cache-busting اختياري أثناء التطوير
-      img.src = CACHE_BUST ? `${src}?v=${Date.now()}` : src;
-      img.alt = `${product.title} - صورة ${i + 1}`;
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      // عند فشل التحميل، ضع صورة بديلة (ضع placeholder.jpg في مجلد images)
-      img.onerror = () => {
-        img.src = 'images/placeholder.jpg';
-      };
+  slides.appendChild(img);
+});
       slides.appendChild(img);
     });
 
