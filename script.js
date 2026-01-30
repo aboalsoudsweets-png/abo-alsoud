@@ -6,13 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const products = [
     {
       id: 'dolma',
-      title: 'محشي العثماني',
+      title: 'دولما ابو السعود',
       desc: 'طعم أصيل ومحشي بمكونات ممتازة.',
-      price: '120 ج.م',
+      price: '500 ج.م',
       images: [
         'images/dolma-1.jpg',
-        'images/dolma-2.jpg',
-        'images/dolma-3.jpg'
+        'images/dolma-2.jpg'
       ]
     },
     {
