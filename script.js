@@ -1,421 +1,298 @@
-/* styles.css
-   تصميم مشابه تماماً للصورة المرسلة (نمط كلاسيكي/فينتاج - RTL - موبايل في المقدمة)
-   ملاحظات:
-    - الألوان الأساسية: مارون #800000 و ذهبي #FFD700
-    - استخدام خطوط Amiri (عنوان) و Cairo (نص)
-*/
+// script.js
+// يولّد بطاقات القائمة ويُفعّل سلايدر صور لكل بطاقة (دعم أزرار + سحب باللمس)
+// يتعامل مع RTL: يجعل الحركة بصريًا من اليمين إلى الشمال لو كانت الصفحة RTL
+// ويعرض إشعارات toast بدل alert ويحتفظ بسلة بسيطة في الذاكرة
 
-/* Variables */
-:root{
-  --maroon: #800000;
-  --gold: #FFD700;
-  --ivory: #fbf6f0;
-  --panel: rgba(255,255,250,0.9);
-  --muted: #7a4a4a;
-}
+document.addEventListener('DOMContentLoaded', () => {
+  // بيانات توضيحية — عدّل/أضف الصور كما تحب
+  const products = [
+    {
+      id: 'dolma',
+      title: 'محشي العثماني',
+      desc: 'طعم أصيل ومحشي بمكونات ممتازة.',
+      price: '120 ج.م',
+      images: [
+        'images/dolma-1.jpg',
+        'images/dolma-2.jpg'
+      ]
+    },
+    {
+      id: 'pistachio',
+      title: 'بستاشيو فاخر',
+      desc: 'قوام كريمي ومكسرات مختارة.',
+      price: '95 ج.م',
+      images: [
+        'images/pistachio-1.jpg',
+        'images/pistachio-2.jpg'
+      ]
+    }
+    // أضف منتجات أخرى هنا بنفس الشكل
+  ];
 
-/* Reset + base */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: "Cairo", "Amiri", system-ui, sans-serif;
-  direction: rtl;
-  background-color: var(--ivory);
-  color: var(--maroon);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  /* subtle vintage damask pattern (SVG data URL) */
-  background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><g fill='%23f6efe9' fill-opacity='1'><path d='M100 0c8 14 24 18 24 34 0 20-20 22-24 46-4-24-24-26-24-46 0-16 16-20 24-34z'/></g></svg>");
-  background-repeat: repeat;
-  background-size: 220px 220px;
-}
+  const menuGrid = document.getElementById('menu-grid');
+  if (!menuGrid) return; // منع الأخطاء لو العنصر غير موجود
 
-/* Container */
-.container{
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
+  // إعدادات:
+  const CACHE_BUST = false; // ضع true أثناء التطوير لو تُحدّث الصور بنفس الاسم
+  const DEFAULT_TRANSITION = 'transform 300ms ease';
 
-/* Header */
-.site-header{
-  padding: 1.1rem 0 0.4rem;
-  text-align:center;
-}
-.site-title{
-  margin:0;
-  color: var(--maroon);
-  font-family: "Amiri", serif;
-  font-size: 2.1rem;
-  letter-spacing: 1px;
-}
+  // ======= Simple cart (in-memory) =======
+  const cart = [];
 
-/* HERO */
-.hero{
-  padding: 1rem 0 2rem;
-}
-.hero-card{
-  text-align:center;
-  padding: 2.2rem 1rem 2.6rem;
-  background: linear-gradient(0deg, rgba(255,255,250,0.85), rgba(255,255,250,0.95));
-  border-radius: 8px;
-  border: 1px solid rgba(128,0,0,0.06);
-  margin-bottom: 1rem;
-}
-.hero-title{
-  font-family: "Amiri", serif;
-  font-size: 2.6rem;
-  margin: 0 0 0.35rem 0;
-  color: var(--maroon);
-}
-.hero-underline{
-  width: 70px;
-  height: 6px;
-  background: var(--gold);
-  margin: 0.45rem auto;
-  border-radius: 4px;
-  box-shadow: 0 2px 0 rgba(0,0,0,0.03) inset;
-}
-.hero-sub{
-  margin: 0.4rem 0 0;
-  font-weight: 700;
-  color: var(--maroon);
-}
-.hero-desc{
-  margin: 0.25rem 0 1rem;
-  color: #6b3a3a;
-  opacity: 0.95;
-}
+  function addToCart(product) {
+    const existing = cart.find(item => item.id === product.id);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        qty: 1
+      });
+    }
+    updateCartUI();
+  }
 
-/* CTA button (rounded deep maroon like screenshot) */
-.btn{
-  display:inline-block;
-  border: none;
-  cursor: pointer;
-  font-weight:700;
-  border-radius: 28px;
-  padding: 0.6rem 1.2rem;
-  color: #fff;
-  background: var(--maroon);
-  box-shadow: 0 6px 0 rgba(128,0,0,0.15);
-  transform: translateY(0);
-}
-.btn:active{ transform: translateY(2px); box-shadow: 0 4px 0 rgba(0,0,0,0.08) }
-.cta-btn{
-  background: var(--maroon);
-  border: 2px solid rgba(0,0,0,0.06);
-  color: #fff;
-}
+  function updateCartUI() {
+    const cartList = document.querySelector('.cart-list');
+    if (!cartList) return; // إذا ماعندك قائمة في الـ HTML تجاهل
+    cartList.innerHTML = cart.map(item => {
+      return `<li class="cart-item" data-id="${item.id}">
+        <strong>${item.title}</strong> <span class="cart-qty">x${item.qty}</span>
+        <div class="cart-price">${item.price}</div>
+      </li>`;
+    }).join('');
+  }
 
-/* Section headings */
-.section-heading{
-  text-align:center;
-  font-family: "Amiri", serif;
-  font-size: 1.3rem;
-  color: var(--maroon);
-  margin: 1.2rem 0 0.2rem;
-}
-.section-sub{
-  text-align:center;
-  color:#7b4747;
-  margin: 0 0 1rem;
-}
+  // toast (non-blocking notification)
+  function showToast(text, timeout = 2000) {
+    let toast = document.createElement('div');
+    toast.className = 'site-toast';
+    toast.textContent = text;
+    document.body.appendChild(toast);
+    // force reflow then show
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+      toast.classList.remove('show');
+      // إزالة بعد انتهاء الإخفاء
+      setTimeout(() => toast.remove(), 300);
+    }, timeout);
+  }
 
-/* MENU GRID (mobile: single column, desktop: 2 columns like screenshot) */
-.menu-grid{
-  display:grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
+  // ======= createProductCard =======
+  function createProductCard(product) {
+    const frame = document.createElement('div');
+    frame.className = 'card-frame';
 
-/* Card outer gold frame */
-.card-frame{
-  border-radius: 12px;
-  padding: 6px;
-  background: linear-gradient(180deg, rgba(255,215,0,0.05), rgba(255,215,0,0.02));
-  border: 2px solid var(--gold);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-}
+    const card = document.createElement('article');
+    card.className = 'card';
+    frame.appendChild(card);
 
-/* Card inner white panel */
-.card{
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  min-height: 420px; /* similar height to screenshot */
-}
+    // slider container
+    const slider = document.createElement('div');
+    slider.className = 'photo-slider';
+    slider.setAttribute('data-index', '0');
 
-/* Image at top (legacy single-image styling kept as fallback) */
-.card .photo{
-  width:100%;
-  height: 220px;
-  object-fit:cover;
-  display:block;
-  background: #f3eae0;
-}
+    const slides = document.createElement('div');
+    slides.className = 'slides';
+    slides.style.transition = DEFAULT_TRANSITION; // تأكد من وجود transition افتراضي
 
-/* Card content area */
-.card-body{
-  padding: 1rem;
-  display:flex;
-  flex-direction:column;
-  justify-content: space-between;
-  flex:1;
-}
-.card-title{
-  color: var(--maroon);
-  font-weight:800;
-  font-size:1.05rem;
-  margin:0 0 0.4rem;
-  text-align:right;
-}
-.card-desc{
-  color:#6b3a3a;
-  margin:0 0 0.6rem;
-  line-height:1.3;
-  font-size:0.95rem;
-  min-height: 56px;
-}
-.card-price{
-  color: var(--maroon);
-  font-weight:900;
-  font-size:1.05rem;
-  margin-bottom: 0.6rem;
-}
+    product.images.forEach((src, i) => {
+      const img = document.createElement('img');
+      img.className = 'slide';
+      // cache-busting اختياري أثناء التطوير
+      img.src = CACHE_BUST ? `${src}?v=${Date.now()}` : src;
+      img.alt = `${product.title} - صورة ${i + 1}`;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      // عند فشل التحميل، ضع صورة بديلة (ضع placeholder.jpg في مجلد images)
+      img.onerror = () => {
+        if (!img._triedPlaceholder) {
+          img._triedPlaceholder = true;
+          img.src = 'images/placeholder.jpg';
+        } else {
+          img.style.background = 'linear-gradient(45deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01))';
+        }
+      };
+      slides.appendChild(img);
+    });
 
-/* action area: rounded button centered like screenshot */
-.card-actions{
-  display:flex;
-  justify-content:center;
-  gap:0.6rem;
-  align-items:center;
-}
-.add-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:0.5rem;
-  padding:0.5rem 1.1rem;
-  background: var(--maroon);
-  color:#fff;
-  border-radius: 28px;
-  border: 2px solid rgba(0,0,0,0.06);
-  box-shadow: 0 6px 0 rgba(128,0,0,0.12);
-}
+    slider.appendChild(slides);
 
-/* Order / Cart area */
-.cart-panel{
-  margin: 1rem 0;
-  border-radius: 10px;
-  padding: 1.2rem;
-  background: linear-gradient(180deg, rgba(255,255,250,0.6), rgba(255,255,250,0.9));
-  border: 1px dashed rgba(128,0,0,0.08);
-  text-align:center;
-  display:flex;
-  gap: 0.8rem;
-  align-items:center;
-  justify-content:center;
-}
-.cart-icon{ font-size: 1.8rem; opacity:0.6 }
-.cart-note{ color:#7b4a4a; margin:0.2rem 0 0 }
+    // prev/next buttons (مخفية إذا صورة واحدة)
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'slide-btn prev';
+    prevBtn.type = 'button';
+    prevBtn.title = 'السابق';
+    prevBtn.innerText = '‹';
 
-/* Order panel (form + cart list) */
-.order-panel{
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  margin-bottom:2rem;
-}
-.cart-list{ list-style:none; padding:0; margin:0 }
-.order-total{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0.6rem 0;
-  border-top:1px dashed rgba(128,0,0,0.06);
-  margin-top:0.6rem;
-}
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'slide-btn next';
+    nextBtn.type = 'button';
+    nextBtn.title = 'التالي';
+    nextBtn.innerText = '›';
 
-/* Customer form */
-.customer-form{ display:flex; flex-direction:column; gap:0.7rem }
-.field span{ display:block; font-size:0.92rem; color:#6b3a3a; margin-bottom:0.25rem }
-.field input, .field textarea{
-  width:100%;
-  padding:0.6rem;
-  border-radius:8px;
-  border:1px solid rgba(128,0,0,0.08);
-  font-size:0.95rem;
-  font-family: inherit;
-}
-.place-btn{ background: #b20000; }
+    if (product.images.length > 1) {
+      slider.appendChild(prevBtn);
+      slider.appendChild(nextBtn);
+    }
 
-/* Contact card */
-.contact-card{
-  padding: 1rem;
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,250,0.85), rgba(255,255,250,0.95));
-  border: 1px solid rgba(128,0,0,0.05);
-  margin-bottom: 2rem;
-}
+    // dots
+    const dots = document.createElement('div');
+    dots.className = 'slide-dots';
+    if (product.images.length > 1) {
+      product.images.forEach((_, idx) => {
+        const dot = document.createElement('button');
+        dot.className = 'dot';
+        dot.type = 'button';
+        dot.setAttribute('data-idx', String(idx));
+        dot.setAttribute('aria-label', `عرض ${idx + 1}`);
+        if (idx === 0) dot.classList.add('active');
+        dots.appendChild(dot);
+      });
+      slider.appendChild(dots);
+    }
 
-/* Footer */
-.site-footer{
-  padding:1rem 0;
-  text-align:center;
-  color:#6b3a3a;
-  font-size:0.9rem;
-}
+    card.appendChild(slider);
 
-/* Responsive breakpoints */
-@media (min-width:700px){
-  .menu-grid{ grid-template-columns: repeat(2,1fr) }
-  .hero-title{ font-size:3.2rem }
-  .card{ min-height: 480px }
-  .card .photo{ height: 260px }
-  .order-panel{ flex-direction:row; gap:1.2rem }
-  .cart-list-wrap{ flex:1 }
-  .customer-form{ width: 360px }
-}
+    // card body
+    const body = document.createElement('div');
+    body.className = 'card-body';
 
-/* --- إضافات السلايدر للصور متعددة --- */
-/* ======= التعديلات الأساسية هنا =======
-   - جعل .slides مرنًا (flex) مع عرض مستقل لكل شريحة
-   - ضمان min-width:100% لكل شريحة (بعض المتصفحات تحتاجها)
-   - التأكد من أن الصور داخل الشريحة تشغل 100% عرض/ارتفاع الشريحة
-   - ضبط transition بشكل واضح وإعادة تفعيله بعد touchend
-   - حماية من قواعد CSS خارجية (عن طريق scoping باستخدام .photo-slider)
-*/
+    const title = document.createElement('h3');
+    title.className = 'card-title';
+    title.innerText = product.title;
 
-.photo-slider{
-  position: relative;
-  overflow: hidden;
-  background: #f3e8e2;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  width: 100%;
-}
+    const desc = document.createElement('p');
+    desc.className = 'card-desc';
+    desc.innerText = product.desc;
 
-/* slides container: كل الشايلات جنب بعض بفضل flex */
-.photo-slider .slides{
-  display:flex;
-  width:100%;
-  transition: transform 0.35s ease;
-  will-change: transform;
-  align-items: stretch; /* يضمن أن الصور تمتد للارتفاع المحدد */
-  gap: 0; /* لا فجوات بين الشرائح */
-}
+    const price = document.createElement('div');
+    price.className = 'card-price';
+    price.innerText = product.price;
 
-/* كل slide يحتل 100% من عرض الحاوية */
-.photo-slider .slide{
-  box-sizing: border-box;
-  flex: 0 0 100%;
-  min-width: 100%;
-  max-width: 100%;
-  height:220px; /* ارتفاع افتراضي - يتغير عند الميديا كويري */
-  display:block;
-  object-fit: cover;
-  user-select: none;
-  -webkit-user-drag: none;
-}
+    const actions = document.createElement('div');
+    actions.className = 'card-actions';
 
-/* تأكد أن العنصر img يملأ الشريحة تمامًا (بعض المتصفحات تتطلب هذا) */
-.photo-slider .slides img{
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none; /* يسمح بالتعامل مع الـ touch على الحاوية بدلًا من الصورة */
-}
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-btn';
+    addBtn.type = 'button';
+    addBtn.innerText = 'أضف إلى السلة';
+    // <-- هنا بدل alert نستخدم addToCart + showToast
+    addBtn.addEventListener('click', () => {
+      addToCart(product);
+      showToast(`${product.title} أُضيفت إلى السلة`);
+    });
 
-/* أزرار prev/next */
-/* استخدمنا خصائص منطقية بدل left/right حتى تتوافق تلقائياً مع اتجاه الصفحة */
-.photo-slider .slide-btn{
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  background: rgba(0,0,0,0.06);
-  color: #fff;
-  border: none;
-  width:38px;
-  height:38px;
-  border-radius: 50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:1.2rem;
-  cursor:pointer;
-  box-shadow: 0 4px 0 rgba(0,0,0,0.06);
-  transition: transform 120ms ease;
-}
-.photo-slider .slide-btn:active{ transform: translateY(-48%); }
+    actions.appendChild(addBtn);
 
-/* RTL-aware positioning: السابق على الـ inline-end، التالي على الـ inline-start */
-.photo-slider .slide-btn.prev{ inset-inline-end: 10px; }
-.photo-slider .slide-btn.next{ inset-inline-start: 10px; }
+    body.appendChild(title);
+    body.appendChild(desc);
+    body.appendChild(price);
+    body.appendChild(actions);
 
-.photo-slider .slide-btn[disabled]{
-  opacity:0.4;
-  pointer-events:none;
-}
+    card.appendChild(body);
 
-/* نقاط التصفح */
-.photo-slider .slide-dots{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:10px;
-  display:flex;
-  gap:8px;
-  z-index:12;
-}
-.photo-slider .dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  border:none;
-  background: rgba(255,255,255,0.6);
-  box-shadow: 0 2px 0 rgba(0,0,0,0.06) inset;
-  cursor:pointer;
-}
-.photo-slider .dot.active{
-  background: var(--maroon);
-  box-shadow: 0 4px 0 rgba(128,0,0,0.12);
-}
+    // ===== Slider logic per-card =====
+    if (product.images.length > 1) {
+      let index = 0;
+      const total = product.images.length;
 
-/* تكيّف الطول على الشاشات الكبيرة */
-@media (min-width:700px){
-  .photo-slider .slide{ height:260px; }
-}
+      // اكتشاف اتجاه الصفحة (RTL أم LTR)
+      const isRTL = getComputedStyle(document.body).direction === 'rtl';
 
-/* ======== toast (non-blocking notification) ======== */
-.site-toast{
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%) translateY(12px);
-  bottom: 20px;
-  background: var(--maroon);
-  color: #fff;
-  padding: 10px 18px;
-  border-radius: 22px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 220ms ease, transform 220ms ease;
-  font-weight: 700;
-  pointer-events: none;
-}
-.site-toast.show{
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
+      // initial state
+      prevBtn.disabled = true;
+      nextBtn.disabled = (total <= 1);
 
-/* ======== نصائح: لو كان لديك قواعد عامة تؤثر على img أو .slide
-   مثل "img { position: absolute }" أو "img { display: inline-block }",
-   فهذه قد تتداخل مع السلايدر. في هذه الحالة ضع قواعد أكثر تحديدًا
-   أو علّق القواعد المتعارضة. ======== */
+      // update function يعكس الإزاحة بصرياً في حالة RTL
+      const update = (newIndex) => {
+        index = Math.max(0, Math.min(total - 1, newIndex));
+        // في LTR: -index*100%, في RTL: +index*100% => الحركة تبدو من اليمين للشمال
+        const offset = isRTL ? index * 100 : -index * 100;
+        slides.style.transform = `translateX(${offset}%)`;
+        slider.setAttribute('data-index', String(index));
+        // update dots
+        const allDots = slider.querySelectorAll('.dot');
+        allDots.forEach(d => d.classList.remove('active'));
+        if (allDots[index]) allDots[index].classList.add('active');
+
+        // disable buttons at ends
+        prevBtn.disabled = (index === 0);
+        nextBtn.disabled = (index === total - 1);
+      };
+
+      prevBtn.addEventListener('click', () => update(index - 1));
+      nextBtn.addEventListener('click', () => update(index + 1));
+
+      // dots click (delegation)
+      dots.addEventListener('click', (e) => {
+        const btn = e.target;
+        if (btn && btn.classList.contains('dot')) {
+          const idx = Number(btn.getAttribute('data-idx'));
+          update(idx);
+        }
+      });
+
+      // touch swipe
+      let startX = 0;
+      let deltaX = 0;
+      slides.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        slides.style.transition = 'none';
+      }, {passive:true});
+
+      slides.addEventListener('touchmove', (e) => {
+        deltaX = e.touches[0].clientX - startX;
+        // percent موجب لو السحب لليمين، سالب لو لليسار
+        const percent = deltaX / slider.clientWidth * 100;
+        const base = isRTL ? index * 100 : -index * 100;
+        // أثناء السحب نعرض تحريك نسبي (في RTL الإشارة تظهر معكوسة بصرياً)
+        slides.style.transform = `translateX(calc(${base}% + ${percent}%))`;
+      }, {passive:true});
+
+      slides.addEventListener('touchend', () => {
+        // رجّع transition المحدد
+        slides.style.transition = DEFAULT_TRANSITION;
+        if (Math.abs(deltaX) > 40) {
+          // المعنى: في LTR سحب لليسار (deltaX < 0) => next
+          // في RTL نعكس المعنى لأن التمرير البصري معكوس
+          if (deltaX < 0) update(index + (isRTL ? -1 : 1));
+          else update(index + (isRTL ? 1 : -1));
+        } else {
+          update(index); // snap back
+        }
+        startX = 0;
+        deltaX = 0;
+      });
+    }
+
+    return frame;
+  }
+
+  // render all products
+  products.forEach(p => {
+    const card = createProductCard(p);
+    menuGrid.appendChild(card);
+  });
+
+  // CTA scroll to menu
+  const scrollBtn = document.getElementById('scroll-to-menu');
+  const menuEl = document.getElementById('menu');
+
+  if (scrollBtn && menuEl) {
+    scrollBtn.addEventListener('click', () => {
+      const isRTL = getComputedStyle(document.body).direction === 'rtl';
+      menuEl.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: isRTL ? 'end' : 'start'
+      });
+    });
+  }
+
+  // year in footer
+  const yearSpan = document.getElementById('year');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+});
