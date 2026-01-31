@@ -268,3 +268,10 @@ renderCart();
 
 /* Expose for debugging */
 window.app = { menuItems, cart, addToCart, renderCart };
+
+
+
+const sliderSection = document.getElementById('scroll-images');
+if (sliderSection) {
+  sliderSection.remove();
+}
