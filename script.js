@@ -645,7 +645,8 @@ if (adminTrigger) {
     
  
 }
-
+  });
+}
 
 
 // ========== LOADING SCREEN ==========
