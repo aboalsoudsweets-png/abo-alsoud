@@ -536,6 +536,11 @@ desc: "حلوى عربية مصنوعة من السمن والسكر والزب�
 ingredients: ["إسبريسو", "حليب", "رغوة حليب", "قرفة"]
 }
 ];
+//=============clicl============
+let isAdmin = false;
+
+
+
 
  // ========== STATE MANAGEMENT ==========
 const state = {
@@ -572,6 +577,38 @@ renderDrinks();
 setupEventListeners();
 hideLoadingScreen();
 updateCartUI();
+
+// 👇 كود الأدمن
+let clickCount = 0;
+let clickTimer = null;
+
+const adminTrigger = document.getElementById("admin-trigger");
+
+if (adminTrigger) {
+  adminTrigger.addEventListener("click", () => {
+    clickCount++;
+
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => {
+      clickCount = 0;
+    }, 1500);
+
+    if (clickCount === 3) {
+      clickCount = 0;
+
+      const code = prompt("ادخل كود الادمن");
+
+      if (code === "1234") {
+        isAdmin = true;
+        showToast("تم تفعيل وضع الأدمن ✅");
+        renderDrinks();
+      } else {
+        showToast("كود غلط ❌");
+      }
+    }
+  });
+}
+
 });
 
 // ========== LOADING SCREEN ==========
@@ -687,6 +724,9 @@ setTimeout(() => {
 // ========== CREATE CARD ==========
 function createDrinkCard(drink) {
   const card = document.createElement("div");
+ if (drink.available === false && !isAdmin) {
+  card.style.opacity = "0.5";
+}
   card.className = "drink-card";
 
   const qty = state.cart
@@ -736,10 +776,27 @@ function createDrinkCard(drink) {
       
       <div style="color: #d4af37;">
         <strong>${drink.price}</strong> ج.م
+     ${isAdmin ? `
+<button onclick="toggleAvailability('${drink.id}')"
+style="
+background: #444;
+color: white;
+border: none;
+padding: 5px 10px;
+border-radius: 5px;
+cursor: pointer;
+margin-top: 5px;
+">
+  ${drink.available === false ? 'اظهار' : 'اخفاء'}
+</button>
+` : ''}
+      
       </div>
 
       <button 
-        onclick="handleQuickAdd(event, '${drink.id}')"
+        <button 
+  ${drink.available === false ? 'disabled' : ''}
+  onclick="handleQuickAdd(event, '${drink.id}')"
         style="background: #d4af37; color: #000; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer;">
         ${qty > 0 ? '➕ المزيد' : '🛍 اضف للسلة'}
       </button>
@@ -1205,4 +1262,15 @@ closeWeightModal();
 // Add function to confirm weight selection
 function confirmWeightSelection() {
 addToCartWithWeight();
+}
+
+
+
+function toggleAvailability(id) {
+  const drink = drinks.find(d => d.id === id);
+
+  if (drink) {
+    drink.available = drink.available === false ? true : false;
+    renderDrinks();
+  }
 }
