@@ -1310,3 +1310,28 @@ function openAdminPanel() {
 function closeAdminPanel() {
   document.getElementById("admin-panel").style.right = "-100%";
 }
+
+
+let clickCount = 0;
+
+const adminTrigger = document.getElementById("admin-trigger");
+
+adminTrigger.addEventListener("click", () => {
+  clickCount++;
+
+  if (clickCount === 3) {
+    const password = prompt("ادخل كلمة السر");
+
+    if (password === "1234") {
+      openAdminPanel();
+    } else {
+      alert("كلمة السر غلط");
+    }
+
+    clickCount = 0;
+  }
+
+  setTimeout(() => {
+    clickCount = 0;
+  }, 1000);
+});
