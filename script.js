@@ -642,11 +642,11 @@ if (adminTrigger) {
 } else {
         showToast("كود غلط ❌");
       }
-    }
-  });
+    
+ 
 }
 
-});
+
 
 // ========== LOADING SCREEN ==========
 function hideLoadingScreen() {
