@@ -598,11 +598,11 @@ if (adminTrigger) {
 
       const code = prompt("ادخل كود الادمن");
 
-      if (code === "1234") {
-        isAdmin = true;
-        showToast("تم تفعيل وضع الأدمن ✅");
-        renderDrinks();
-      } else {
+     if (code === "1234") {
+  isAdmin = true;
+  showToast("تم تفعيل وضع الأدمن ✅");
+  openAdminPanel(); // 🔥 دي أهم حاجة
+} else {
         showToast("كود غلط ❌");
       }
     }
@@ -1267,10 +1267,41 @@ addToCartWithWeight();
 
 
 function toggleAvailability(id) {
-  const drink = drinks.find(d => d.id === id);
+ const saved = localStorage.getItem("products");
+if (saved) {
+  const parsed = JSON.parse(saved);
+  parsed.forEach(savedItem => {
+    const original = drinks.find(d => d.id === savedItem.id);
+    if (original) {
+      original.available = savedItem.available;
+    }
+  });
+}
 
-  if (drink) {
-    drink.available = drink.available === false ? true : false;
-    renderDrinks();
-  }
+
+
+function openAdminPanel() {
+  document.getElementById("admin-panel").style.right = "0";
+  renderAdminPanel();
+}
+
+function closeAdminPanel() {
+  document.getElementById("admin-panel").style.right = "-100%";
+}
+
+function renderAdminPanel() {
+  const container = document.getElementById("admin-products");
+
+  container.innerHTML = drinks.map(drink => `
+    <div style="border-bottom:1px solid #444; padding:10px 0; text-align:right;">
+      
+      <div>${drink.nameAr}</div>
+
+      <button onclick="toggleAvailability('${drink.id}')"
+      style="margin-top:5px; padding:5px 10px; cursor:pointer;">
+        ${drink.available === false ? '❌ غير متوفر' : '✅ متوفر'}
+      </button>
+
+    </div>
+  `).join("");
 }
