@@ -593,16 +593,28 @@ weightModalClose: document.getElementById("weight-modal-close")
 
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", async () => {
-  const snapshot = await db.collection("products").get();
+  try {
+    const snapshot = await db.collection("products").get();
 
-if (snapshot.empty) {
-  await uploadDefaultProducts();
-}
+    if (snapshot.empty) {
+      await uploadDefaultProducts();
+    }
+
+  } catch (error) {
+    console.error("🔥 Firebase مش شغال:", error);
+    drinks = defaultDrinks;
+  }
+
   setupEventListeners();
-  hideLoadingScreen();
   updateCartUI();
- renderDrinks();
+  renderDrinks();
 
+  // 👇 هنا بالظبط
+  setTimeout(() => {
+    DOM.loadingScreen.style.display = "none";
+  }, 1000);
+
+});
 // 👇 كود الأدمن
 let clickCount = 0;
 let clickTimer = null;
