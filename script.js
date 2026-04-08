@@ -537,7 +537,7 @@ ingredients: ["إسبريسو", "حليب", "رغوة حليب", "قرفة"]
 }
 ];
 
-let drinks = JSON.parse(localStorage.getItem("products")) || defaultDrinks;
+let drinks = [];
 //=============clicl============
 let isAdmin = false;
 
@@ -575,10 +575,11 @@ weightModalClose: document.getElementById("weight-modal-close")
 
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", () => {
-renderDrinks();
+
 setupEventListeners();
 hideLoadingScreen();
 updateCartUI();
+ renderDrinks();
 
 // 👇 كود الأدمن
 let clickCount = 0;
@@ -700,27 +701,29 @@ setTimeout(() => card.classList.add("visible"), index * 50);
 }
 
 // ========== RENDER DRINKS ==========
-function renderDrinks() {
-if (state.currentFilter === "none") {
-DOM.drinksGrid.innerHTML = "";
-return;
-}
+// دالة لعرض المنتجات من Firebase
+async function renderDrinks() {
+  const snapshot = await db.collection("products").get();
 
-const filtered = state.currentFilter === "all"
-? drinks
-: drinks.filter(d => d.category === state.currentFilter);
+  drinks = snapshot.docs.map(doc => ({
+    firebaseId: doc.id, // 🔥 مهم جدًا
+    ...doc.data()
+  }));
 
-DOM.drinksGrid.innerHTML = "";
+  const filtered = state.currentFilter === "all"
+    ? drinks
+    : drinks.filter(d => d.category === state.currentFilter);
 
-filtered.forEach((drink, index) => {
-const card = createDrinkCard(drink);
-DOM.drinksGrid.appendChild(card);
+  DOM.drinksGrid.innerHTML = "";
 
-setTimeout(() => {  
-  card.classList.add("visible");  
-}, index * 50);
+  filtered.forEach((drink, index) => {
+    const card = createDrinkCard(drink);
+    DOM.drinksGrid.appendChild(card);
 
-});
+    setTimeout(() => {
+      card.classList.add("visible");
+    }, index * 50);
+  });
 }
 
 // ========== CREATE CARD ==========
@@ -1277,18 +1280,26 @@ addToCartWithWeight();
 
 
 
+
+// دالة لتغيير التوفر (إخفاء أو إظهار)
 function toggleAvailability(id) {
   const product = drinks.find(d => d.id === id);
 
   if (product) {
-    product.available = !product.available;
+    product.available = !product.available; // تغيير الحالة
+    // تحديث قاعدة البيانات في Firebase
+    const productRef = db.collection("products").doc(product.firebaseId);
+    productRef.update({
+      available: product.available // تحديث الحقل في Firebase
+    })
+    .then(() => {
+      showToast(`تم تحديث التوفر بنجاح`);
+      renderDrinks(); // تحديث عرض المنتجات في الموقع
+    })
+    .catch((error) => {
+      console.error("Error updating product availability: ", error);
+    });
   }
-
-  // حفظ في localStorage
-  localStorage.setItem("products", JSON.stringify(drinks));
-
-  renderDrinks();
-  renderAdminPanel();
 }
 
 
@@ -1323,26 +1334,3 @@ function closeAdminPanel() {
 }
 
 
-let clickCount = 0;
-
-const adminTrigger = document.getElementById("admin-trigger");
-
-adminTrigger.addEventListener("click", () => {
-  clickCount++;
-
-  if (clickCount === 3) {
-    const password = prompt("ادخل كلمة السر");
-
-    if (password === "1234") {
-      openAdminPanel();
-    } else {
-      alert("كلمة السر غلط");
-    }
-
-    clickCount = 0;
-  }
-
-  setTimeout(() => {
-    clickCount = 0;
-  }, 1000);
-});
