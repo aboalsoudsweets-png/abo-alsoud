@@ -1,160 +1,160 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+<html lang="ar" dir="ltr" class="dark">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>حلويات أبو السعود</title>
-
-  <!-- Vintage Arabic fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital@0;1&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="styles.css">
-  <meta name="theme-color" content="#800000">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ABU ALSOUD | منيو الحلويات الشرقي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css?v=1.2" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <h1 class="site-title">حلويات أبو السعود</h1>
+
+  <div id="loading-screen">
+    <div class="loading-content">
+      <h1 class="loading-title">ABU ALSOUD</h1>
+      <p>...جاري التحضير</p>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <!-- Hero / Welcome -->
-    <section id="home" class="hero">
-      <div class="container hero-card">
-        <h2 class="hero-title">حلويات أبو السعود</h2>
-        <div class="hero-underline" aria-hidden="true"></div>
-        <p class="hero-sub">أهلاً بكم</p>
-        <p class="hero-desc">حيث يجتمع الطعم الأصيل مع الفخامة في كل قطعة</p>
-
-        <div class="hero-cta-wrap">
-          <button class="btn cta-btn" id="scroll-to-menu">تصفح القائمة</button>
-        </div>
+  <nav id="navbar">
+    <div class="nav-logo"><span>ABU ALSOUD</span></div>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div id="cart-icon-wrap" style="position: relative; cursor: pointer;">
+        <span style="font-size: 1.5rem;">🛒</span>
+        <span id="cart-count">0</span>
       </div>
-    </section>
-
-    <!-- Menu Section -->
-    <section id="menu" class="menu-section">
-      <div class="container">
-        <h3 class="section-heading">قائمتنا المميزة</h3>
-        <p class="section-sub">اختر من أشهى حلوياتنا الغربية</p>
-
-        <div id="menu-grid" class="menu-grid">
-          <!-- Cards are generated dynamically by script.js -->
-        </div>
-      </div>
-    </section>
-
-
-
-
-
-
-
-
-  <!-- Categories Section -->
-            <section class="categories-section" id="categories">
-                <h2 class="section-title">تصفح حسب القسم</h2>
-                
-                <div class="categories-buttons">
-                    <button class="category-btn active" data-category="reception"></button>
-                    <button class="category-btn" data-category="master-bedroom"> </button>
-                    <button class="category-btn" data-category="boys-room"> </button>
-                    <button class="category-btn" data-category="girls-room"> </button>
-                    <button class="category-btn" data-category="small-bathroom">  </button>
-                    <button class="category-btn" data-category="large-bathroom">  </button>
-                    <button class="category-btn" data-category="kitchen"></button>
-                    <button class="category-btn " data-category="fela-k"> </button>
-                    <button class="category-btn " data-category="fela_3"> </button>
-                    <button class="category-btn " data-category="garden"></button>
-                     <button class="category-btn " data-category="bab">  </button>
-                     <button class="category-btn " data-category="gardn"> </button>
-                    <button class="category-btn " data-category="srer">  </button>
-                </div>
-
-                <div class="category-gallery" id="categoryGallery">
-                    <!-- سيتم ملء الصور هنا من JavaScript -->
-                </div>
-            </section>
-        </main>
-
-
-
-
-
-
-    
-    <!-- Scroll Images Section -->
-   
-      <h3 class="section-heading">صور مميزة من حلوياتنا</h3>
-      <p class="section-sub">استمتع بمشاهدة أشهى منتجاتنا</p>
-
      
-    <!-- Order / Cart -->
-    <section id="order" class="order-section">
-      <div class="container">
-        <div class="cart-panel">
-          <div class="cart-icon">🧾</div>
-          <div class="cart-content">
-            <h4>سلة الطلبات فارغة</h4>
-            <p class="cart-note">أضف بعض المنتجات للبدء في الطلب</p>
-          </div>
-        </div>
-
-        <div class="order-panel">
-          <div class="cart-list-wrap">
-            <ul id="cart-items" class="cart-list"></ul>
-            <div class="order-total">
-              <span>الإجمالي</span>
-              <strong id="total-price">0 ج.م</strong>
-            </div>
-          </div>
-
-          <form id="customer-form" class="customer-form" autocomplete="on">
-            <label class="field">
-              <span>الاسم</span>
-              <input id="customer-name" type="text" required placeholder="اسمك">
-            </label>
-
-            <label class="field">
-              <span>رقم الهاتف</span>
-              <input id="customer-phone" type="tel" required placeholder="0112xxxxxxx" pattern="[0-9+\s\-()]{6,}">
-            </label>
-
-            <label class="field">
-              <span>العنوان</span>
-              <textarea id="customer-address" rows="3" required placeholder="العنوان الكامل"></textarea>
-            </label>
-
-            <button type="button" id="place-order" class="btn place-btn">أرسل الطلب عبر واتساب</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="contact-section">
-      <div class="container contact-card">
-        <h4>تواصل معنا</h4>
-        <p>الهاتف: <a href="tel:01125933005">01125933005</a></p>
-        <p>
-          طلب سريع عبر واتساب:
-          <a class="btn whatsapp-btn" href="https://wa.me/201125933005" target="_blank">اطلب الآن</a>
-        </p>
-        <div class="socials">
-          <a href="#" target="_blank">إنستاغرام</a>
-          <a href="#" target="_blank">فيسبوك</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="container">
-      <small>© <span id="year"></span> حلويات أبو السعود — كل الحقوق محفوظة</small>
     </div>
-  </footer>
+  </nav>
 
+<section id="menu" style="padding-top: 100px;">
+  <div class="menu-header" style="text-align: center; margin-bottom: 30px;">
+    <img src="logo.png" alt="Logo" class="main-logo" style="max-width: 280px; height: auto;">
+    <h2 dir="rtl" style="color: #d4af37; font-family: 'Cairo', sans-serif; margin-top: 15px; font-weight: 700; font-size: 1.4rem; margin-bottom: 5px;">
+      أهلاً بكم في حلويات أبو السعود العربية
+    </h2>
+    
+    <p dir="rtl" style="color: #ffffff; font-family: 'Cairo', sans-serif; font-weight: 400; font-size: 1.1rem; margin-top: 0;">
+      اختر من قائمة الأصناف
+    </p>
+  </div>
+
+ <div class="filters" dir="rtl" style="text-align:center; margin-bottom: 40px; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+    <button class="filter-btn" data-filter="konafa" style="border-radius: 4px !important;">كنافة</button>
+    <button class="filter-btn" data-filter="baqlawa" style="border-radius: 4px !important;">بقلاوة</button>
+    
+    <div style="flex-basis: 100%; height: 0;"></div> 
+    <button class="filter-btn" data-filter="namora" style="border-radius: 4px !important;">نمورة</button>
+  </div>
+ <div id="sub-filters-container" dir="rtl" style="text-align:center; margin-bottom: 30px; display: none; flex-wrap: wrap; justify-content: center; gap: 10px;">
+ </div>
+  
+
+  
+  <div class="drinks-grid" id="drinks-grid"></div>
+</section>
+
+<div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-box">
+      <img id="modal-img" src="" />
+      <div class="modal-body" dir="rtl">
+        <button class="modal-close" id="modal-close">✕</button>
+        <h2 id="modal-name-ar"></h2>
+        <p id="modal-name-en"></p>
+        <div class="modal-price-box"><span id="modal-price"></span> ج.م</div>
+        <p id="modal-desc"></p>
+        <ul id="modal-ing-list"></ul>
+        <button class="order-btn" id="order-btn">🛍 أضف للطلب</button>
+      </div>
+    </div>
+  </div>
+
+ <div id="cart-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 450px; flex-direction: column; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-body" dir="rtl">
+        <button class="modal-close" id="cart-modal-close">✕</button>
+        <h2 style="text-align: center; color: #d4af37; margin-bottom: 20px;">🛒 سلتك</h2>
+        
+        <div id="cart-items-list" style="margin: 10px 0; border-bottom: 1px solid #444; padding-bottom: 10px;"></div>
+        
+        <div style="margin: 15px 0; font-weight: bold; font-size: 1.2rem;">
+            الإجمالي: <span id="cart-total-price">0</span> ج.م
+        </div>
+
+        <hr style="border: 0.5px solid #333; margin: 20px 0;">
+
+       
+
+        <button id="checkout-whatsapp" style="background:#25D366; width: 100%; margin-top: 20px; padding: 12px; border-radius: 8px; color: white; border: none; font-weight: bold; cursor: pointer; font-size: 1.1rem;">
+            إرسال الطلب عبر واتساب
+        </button>
+      </div>
+    </div>
+</div>
+  <div id="toast" class="toast hidden"></div>
   <script src="script.js"></script>
+
+
+  <footer class="main-footer">
+  <div class="footer-content">
+    <div class="establishment-date">
+      <p>تأسس عام ١٨٩٦ م</p>
+      <p>أبو السعود ©</p>
+    </div>
+
+    <div class="social-links">
+      <a href="https://www.instagram.com/abusaudsweets?igsh=MTJpMnNqcm14dXVvMw==" target="_blank" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://www.facebook.com/share/1JqpvBfRoH/" target="_blank" aria-label="Facebook">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </div>
+  </div>
+</footer>
+
+
+
+
+<div id="weight-modal-overlay" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 350px;">
+        <div class="modal-body" dir="rtl" style="text-align: center;">
+            <button class="modal-close" id="weight-modal-close">✕</button>
+            <h3 style="color: #d4af37; margin-bottom: 20px; font-family: 'Cairo', sans-serif;">اختر الكمية المطلوبة</h3>
+
+            <div id="weight-price" style="color:#d4af37; font-size:18px; margin-bottom:10px;"> 0 ج.م</div>
+          
+            <div class="weight-options" style="display: flex; flex-direction: column; gap: 10px;">
+
+              
+                <button class="weight-btn" data-multiplier="1" style="background: #444; color: white; padding: 12px; border: 1px solid #d4af37; border-radius: 8px; cursor: pointer; font-family: 'Cairo';">
+                    ١ كيلو 
+                </button>
+                <button class="weight-btn" data-multiplier="0.5" style="background: #444; color: white; padding: 12px; border: 1px solid #d4af37; border-radius: 8px; cursor: pointer; font-family: 'Cairo';">
+                    نصف كيلو 
+                </button>
+                <button class="weight-btn" data-multiplier="0.25" style="background: #444; color: white; padding: 12px; border: 1px solid #d4af37; border-radius: 8px; cursor: pointer; font-family: 'Cairo';">
+                    ربع كيلو 
+                </button>
+              <button class="weight-btn" data-multiplier="1.25" style="background: #444; color: white; padding: 12px; border: 1px solid #d4af37; border-radius: 8px; cursor: pointer; font-family: 'Cairo';">
+                كيلو وربع
+                </button>
+
+              <button class="weight-btn" data-multiplier="1.5" style="background: #444; color: white; padding: 12px; border: 1px solid #d4af37; border-radius: 8px; cursor: pointer; font-family: 'Cairo';">
+                كيلو ونص 
+               </button>
+            </div>
+          <button onclick="confirmWeightSelection()" 
+        style="margin-top:15px; background:#d4af37; color:#000; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-family:'Cairo';">
+  إضافة للسلة
+</button>
+        </div>
+    </div>
+</div>
+  
+
+  
+  
 </body>
 </html>
