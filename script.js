@@ -593,8 +593,11 @@ weightModalClose: document.getElementById("weight-modal-close")
 
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", async () => {
-  await uploadDefaultProducts();
+  const snapshot = await db.collection("products").get();
 
+if (snapshot.empty) {
+  await uploadDefaultProducts();
+}
   setupEventListeners();
   hideLoadingScreen();
   updateCartUI();
@@ -770,7 +773,7 @@ async function uploadDefaultProducts() {
   if (!snapshot.empty) return; // لو فيه بيانات بلاش
 
   for (let drink of defaultDrinks) {
-   await db.collection("products").doc(drink.id).set({
+  await db.collection("products").add({
   ...drink,
   available: true
 });
