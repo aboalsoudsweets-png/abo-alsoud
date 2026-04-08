@@ -1267,27 +1267,22 @@ addToCartWithWeight();
 
 
 function toggleAvailability(id) {
- const saved = localStorage.getItem("products");
-if (saved) {
-  const parsed = JSON.parse(saved);
-  parsed.forEach(savedItem => {
-    const original = drinks.find(d => d.id === savedItem.id);
-    if (original) {
-      original.available = savedItem.available;
-    }
-  });
-}
+  const product = drinks.find(d => d.id === id);
 
+  if (product) {
+    product.available = !product.available;
+  }
 
+  // حفظ في localStorage
+  localStorage.setItem("products", JSON.stringify(drinks));
 
-function openAdminPanel() {
-  document.getElementById("admin-panel").style.right = "0";
+  renderDrinks();
   renderAdminPanel();
 }
 
-function closeAdminPanel() {
-  document.getElementById("admin-panel").style.right = "-100%";
-}
+
+
+
 
 function renderAdminPanel() {
   const container = document.getElementById("admin-products");
@@ -1304,4 +1299,14 @@ function renderAdminPanel() {
 
     </div>
   `).join("");
+}
+
+
+function openAdminPanel() {
+  document.getElementById("admin-panel").style.right = "0";
+  renderAdminPanel();
+}
+
+function closeAdminPanel() {
+  document.getElementById("admin-panel").style.right = "-100%";
 }
