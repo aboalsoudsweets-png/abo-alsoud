@@ -565,7 +565,7 @@ let isAdmin = false;
  // ========== STATE MANAGEMENT ==========
 const state = {
 cart: JSON.parse(localStorage.getItem("cart")) || [],
-currentFilter: "none",
+currentFilter: "all",
 selectedDrink: null,
 selectedWeight: 1 // Default weight
 };
@@ -592,11 +592,12 @@ weightModalClose: document.getElementById("weight-modal-close")
 };
 
 // ========== INITIALIZATION ==========
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await uploadDefaultProducts();
 
-setupEventListeners();
-hideLoadingScreen();
-updateCartUI();
+  setupEventListeners();
+  hideLoadingScreen();
+  updateCartUI();
  renderDrinks();
 
 // 👇 كود الأدمن
@@ -721,12 +722,31 @@ setTimeout(() => card.classList.add("visible"), index * 50);
 // ========== RENDER DRINKS ==========
 // دالة لعرض المنتجات من Firebase
 async function renderDrinks() {
-  const snapshot = await db.collection("products").get();
+  try {
+    const snapshot = await db.collection("products").get();
 
-  drinks = snapshot.docs.map(doc => ({
-    firebaseId: doc.id, // 🔥 مهم جدًا
-    ...doc.data()
-  }));
+    if (snapshot.empty) {
+      drinks = defaultDrinks.map(d => ({
+        ...d,
+        available: true
+      }));
+    } else {
+      drinks = snapshot.docs.map(doc => ({
+        firebaseId: doc.id,
+        ...doc.data(),
+        available: doc.data().available !== false
+      }));
+    }
+
+  } catch (error) {
+    console.error("Firebase Error:", error);
+
+    // 🔥 fallback لو النت وقع
+    drinks = defaultDrinks.map(d => ({
+      ...d,
+      available: true
+    }));
+  }
 
   const filtered = state.currentFilter === "all"
     ? drinks
@@ -742,6 +762,21 @@ async function renderDrinks() {
       card.classList.add("visible");
     }, index * 50);
   });
+}
+
+async function uploadDefaultProducts() {
+  const snapshot = await db.collection("products").get();
+
+  if (!snapshot.empty) return; // لو فيه بيانات بلاش
+
+  for (let drink of defaultDrinks) {
+   await db.collection("products").doc(drink.id).set({
+  ...drink,
+  available: true
+});
+  }
+
+  console.log("تم رفع المنتجات لأول مرة ✅");
 }
 
 // ========== CREATE CARD ==========
@@ -797,24 +832,28 @@ function createDrinkCard(drink) {
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
       
-      <div style="color: #d4af37;">
-        <strong>${drink.price}</strong> ج.م
-     ${isAdmin ? `
-<button onclick="toggleAvailability('${drink.id}')"
-style="
-background: #444;
-color: white;
-border: none;
-padding: 5px 10px;
-border-radius: 5px;
-cursor: pointer;
-margin-top: 5px;
-">
-  ${drink.available === false ? 'اظهار' : 'اخفاء'}
-</button>
-` : ''}
-      
-      </div>
+     <div style="display:flex; flex-direction:column; align-items:flex-start; gap:5px;">
+  
+  <div style="color: #d4af37;">
+    <strong>${drink.price}</strong> ج.م
+  </div>
+
+  ${isAdmin ? `
+    <button onclick="toggleAvailability('${drink.id}')"
+    style="
+      background: #444;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+    ">
+      ${drink.available === false ? 'اظهار' : 'اخفاء'}
+    </button>
+  ` : ''}
+
+</div>
 
      
 <button
@@ -1303,21 +1342,25 @@ addToCartWithWeight();
 function toggleAvailability(id) {
   const product = drinks.find(d => d.id === id);
 
-  if (product) {
-    product.available = !product.available; // تغيير الحالة
-    // تحديث قاعدة البيانات في Firebase
-    const productRef = db.collection("products").doc(product.firebaseId);
-    productRef.update({
-      available: product.available // تحديث الحقل في Firebase
-    })
-    .then(() => {
-      showToast(`تم تحديث التوفر بنجاح`);
-      renderDrinks(); // تحديث عرض المنتجات في الموقع
-    })
-    .catch((error) => {
-      console.error("Error updating product availability: ", error);
-    });
+  if (!product || !product.firebaseId) {
+    showToast("خطأ في المنتج ❌");
+    return;
   }
+
+  product.available = !product.available;
+
+  db.collection("products").doc(product.firebaseId).update({
+    available: product.available
+  })
+  .then(() => {
+    showToast("تم التحديث ✅");
+    renderDrinks();
+    renderAdminPanel();
+  })
+  .catch((error) => {
+    console.error(error);
+    showToast("حصل خطأ ❌");
+  });
 }
 
 
