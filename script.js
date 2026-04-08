@@ -796,16 +796,19 @@ margin-top: 5px;
       </div>
 
      
-<button 
-  ${drink.available === false ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}
+<button
+  ${drink.available === false ? 'disabled' : ''}
   onclick="handleQuickAdd(event, '${drink.id}')"
-  style="background: #d4af37; color: #000; border: none; padding: 6px 15px; border-radius: 6px; cursor: pointer;">
-  
-  ${drink.available === false 
-    ? 'غير متوفر' 
-    : qty > 0 
-      ? '➕ المزيد' 
-      : '🛍 اضف للسلة'}
+  style="
+    background: ${drink.available === false ? '#555' : '#d4af37'};
+    color: ${drink.available === false ? '#aaa' : '#000'};
+    border: none;
+    padding: 6px 15px;
+    border-radius: 6px;
+    cursor: ${drink.available === false ? 'not-allowed' : 'pointer'};
+  "
+>
+  ${drink.available === false ? '❌ غير متوفر' : (qty > 0 ? '➕ المزيد' : '🛍 اضف للسلة')}
 </button>
 
 
