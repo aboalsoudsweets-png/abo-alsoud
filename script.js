@@ -537,6 +537,24 @@ ingredients: ["إسبريسو", "حليب", "رغوة حليب", "قرفة"]
 }
 ];
 
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBFBnaSspqZZ32YPQOlVFxLC23Ik5LalEM",
+  authDomain: "abo-alsoude.firebaseapp.com",
+  projectId: "abo-alsoude",
+  storageBucket: "abo-alsoude.firebasestorage.app",
+  messagingSenderId: "207897769616",
+  appId: "1:207897769616:web:28a481314624f92ea50a15",
+  measurementId: "G-C39993QJZF"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+
+
+
 let drinks = [];
 //=============clicl============
 let isAdmin = false;
