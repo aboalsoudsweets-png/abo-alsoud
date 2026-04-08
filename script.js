@@ -616,6 +616,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 });
 // 👇 كود الأدمن
+// 👇 كود الأدمن
 let clickCount = 0;
 let clickTimer = null;
 
@@ -635,18 +636,17 @@ if (adminTrigger) {
 
       const code = prompt("ادخل كود الادمن");
 
-     if (code === "1234") {
-  isAdmin = true;
-  showToast("تم تفعيل وضع الأدمن ✅");
-  openAdminPanel(); // 🔥 دي أهم حاجة
-} else {
+      if (code === "1234") {
+        isAdmin = true;
+        showToast("تم تفعيل وضع الأدمن ✅");
+        openAdminPanel();
+      } else {
         showToast("كود غلط ❌");
-      
-     }
- 
-}
-  });
-}
+      }
+    }
+
+  }); // 👈 مهم
+} // 👈 مهم
 
 
 // ========== LOADING SCREEN ==========
