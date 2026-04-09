@@ -786,10 +786,10 @@ async function uploadDefaultProducts() {
   if (!snapshot.empty) return; // لو فيه بيانات بلاش
 
   for (let drink of defaultDrinks) {
-  await db.collection("products").add({
-  ...drink,
-  available: true
-});
+    await db.collection("products").add({
+      ...drink,
+      available: true // تأكد من إضافة هذا المفتاح لكل منتج
+    });
   }
 
   console.log("تم رفع المنتجات لأول مرة ✅");
