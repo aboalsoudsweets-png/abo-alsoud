@@ -594,7 +594,13 @@ weightModalClose: document.getElementById("weight-modal-close")
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    const snapshot = await db.collection("products").get();
+    let snapshot;
+
+try {
+  snapshot = await db.collection("products").get();
+} catch (e) {
+  console.log("Firebase وقع", e);
+}
 
     if (snapshot.empty) {
       await uploadDefaultProducts();
@@ -611,8 +617,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // 👇 هنا بالظبط
   setTimeout(() => {
-    DOM.loadingScreen.style.display = "none";
-  }, 1000);
+  const loading = document.getElementById("loading-screen");
+  if (loading) {
+    loading.style.display = "none";
+  }
+}, 1000);
 
 });
 // 👇 كود الأدمن
@@ -1411,3 +1420,11 @@ function closeAdminPanel() {
 }
 
 
+
+
+window.onload = function () {
+  const loading = document.getElementById("loading-screen");
+  if (loading) {
+    loading.style.display = "none";
+  }
+};
