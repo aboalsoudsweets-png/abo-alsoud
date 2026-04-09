@@ -53,7 +53,7 @@ ingredients: []
 id: "504",
 nameAr: " نابلسية و عربية نصف و نصف ",
 nameEn: "",
-price: 135,
+price: 500,
 category: "konafa",
 image: "504.JPG",
 desc: "",
@@ -1198,7 +1198,7 @@ const formHtml = `
   <input 
     id="cust-address" 
     type="text" 
-    placeholder="العنوان"
+    placeholder=" العنوان ( مدينة نصر و مصر الد"
     style="padding:10px; border-radius:6px; border:none; background:#222; color:#fff;"
   />
 
