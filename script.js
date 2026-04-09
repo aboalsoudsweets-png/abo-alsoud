@@ -626,17 +626,28 @@ DOM.drinksGrid.style.display = "none";
   }
 
   // ✅ Firebase لوحده
- try {
+try {
   let snapshot = await db.collection("products").get();
 
   if (snapshot.empty) {
     await uploadDefaultProducts();
     drinks = defaultDrinks;
   } else {
-    drinks = snapshot.docs.map(doc => ({
+    const firebaseData = snapshot.docs.map(doc => ({
       firebaseId: doc.id,
       ...doc.data()
     }));
+
+    // 🔥 ندمج الكود مع Firebase (الكود يكسب)
+    drinks = defaultDrinks.map(localItem => {
+      const firebaseItem = firebaseData.find(f => f.id === localItem.id);
+
+      return {
+        ...localItem, // 👈 السعر من الكود
+        firebaseId: firebaseItem?.firebaseId,
+        available: firebaseItem?.available ?? true
+      };
+    });
   }
 
 } catch (error) {
