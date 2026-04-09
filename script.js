@@ -593,7 +593,7 @@ weightModalClose: document.getElementById("weight-modal-close")
 
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", async () => {
-
+DOM.drinksGrid.style.display = "none";
   // ✅ كود الأدمن (لوحده فوق)
   let clickCount = 0;
   let clickTimer = null;
@@ -646,7 +646,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   setupEventListeners();
   updateCartUI();
-  renderDrinks();
+ 
 
   setTimeout(() => {
     const loading = document.getElementById("loading-screen");
@@ -686,65 +686,78 @@ return drink.nameAr.includes("صحن");
 }
 
 // ========== FILTER FUNCTIONALITY ==========
+
+
+
 const baqlawaTypes = [
-{ id: 'fustuk', name: 'بقلاوة فستق', keys: ['فستق', 'بستاشيو', 'بلوريا', 'صره', 'اسيا', 'كل واشكر فستق', 'دولمة', 'اساور', 'سنيورة'] },
-{ id: 'loz', name: 'بقلاوة لوز', keys: ['مشكل لوز','لوكم بندق','اصابع كاجو ','بقلاوة اسطنبولي جوز','كنافة لوز','بورمة لوز','عش البلبل لوز','بقلاوة اسطنبولي لوز','بقلاوة لوز','صرة لوز','كل وشكر لوز','اصابع لوز','عش البلبل كاجو','وربات لوز','لوكم بندق', 'مشكل لوز' ] },
-{ id: 'mix', name: 'أصناف متنوعة', keys: [  'عجوة' ,'معمول جوز','غريبة'] }
+  { id: 'fustuk', name: 'بقلاوة فستق', keys: ['فستق', 'بستاشيو', 'بلوريا', 'صره', 'اسيا', 'كل واشكر فستق', 'دولمة', 'اساور', 'سنيورة'] },
+  { id: 'loz', name: 'بقلاوة لوز', keys: ['مشكل لوز','لوكم بندق','اصابع كاجو ','بقلاوة اسطنبولي جوز','كنافة لوز','بورمة لوز','عش البلبل لوز','بقلاوة اسطنبولي لوز','بقلاوة لوز','صرة لوز','كل وشكر لوز','اصابع لوز','عش البلبل كاجو','وربات لوز','لوكم بندق', 'مشكل لوز'] },
+  { id: 'mix', name: 'أصناف متنوعة', keys: ['عجوة','معمول جوز','غريبة'] }
 ];
 
 function filterDrinks(category) {
-state.currentFilter = category;
-const subContainer = document.getElementById("sub-filters-container");
+  state.currentFilter = category;
+  const subContainer = document.getElementById("sub-filters-container");
 
-DOM.filterBtns.forEach(btn => {
-btn.classList.toggle("active", btn.dataset.filter === category);
-});
+  // 👇 نظهر الكروت أول ما المستخدم يضغط
+  DOM.drinksGrid.style.display = "grid";
 
-if (category === "baqlawa") {
-subContainer.style.display = "flex";
-subContainer.innerHTML = baqlawaTypes.map(type => `
-  <button class="filter-btn sub-btn" onclick="filterSubCategory('${type.id}')"
-    style="background: #1a1a1a; border: 1px solid #d4af37; font-size: 0.9rem; padding: 5px 15px;">
-    ${type.name}
-  </button>
-`).join("");
+  DOM.filterBtns.forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.filter === category);
+  });
 
-DOM.drinksGrid.innerHTML = `<p style="color:#aaa; width:100%; text-align:center;">اختر نوع البقلاوة المفضل لديك</p>`;
+  if (category === "baqlawa") {
+    subContainer.style.display = "flex";
+    subContainer.innerHTML = baqlawaTypes.map(type => `
+      <button class="filter-btn sub-btn" onclick="filterSubCategory('${type.id}')"
+        style="background: #1a1a1a; border: 1px solid #d4af37; font-size: 0.9rem; padding: 5px 15px;">
+        ${type.name}
+      </button>
+    `).join("");
 
-} else {
-subContainer.style.display = "none";
-renderDrinks();
-}
+    DOM.drinksGrid.innerHTML = `
+      <p style="color:#aaa; width:100%; text-align:center;">
+        اختر نوع البقلاوة المفضل لديك
+      </p>
+    `;
+
+  } else {
+    subContainer.style.display = "none";
+    renderDrinks();
+  }
 }
 
 function filterSubCategory(subId) {
-const typeData = baqlawaTypes.find(t => t.id === subId);
+  const typeData = baqlawaTypes.find(t => t.id === subId);
 
-const filtered = drinks.filter(d =>
-d.category === "baqlawa" &&
-typeData.keys.some(key => d.nameAr.includes(key))
-);
+  const filtered = drinks.filter(d =>
+    d.category === "baqlawa" &&
+    typeData.keys.some(key => d.nameAr.includes(key))
+  );
 
-document.querySelectorAll('.sub-btn').forEach(btn => {
-btn.style.background = (btn.innerText === typeData.name) ? "#d4af37" : "#1a1a1a";
-btn.style.color = (btn.innerText === typeData.name) ? "#000" : "#fff";
-});
+  document.querySelectorAll('.sub-btn').forEach(btn => {
+    btn.style.background = (btn.innerText === typeData.name) ? "#d4af37" : "#1a1a1a";
+    btn.style.color = (btn.innerText === typeData.name) ? "#000" : "#fff";
+  });
 
-displayFilteredDrinks(filtered);
+  displayFilteredDrinks(filtered);
 }
 
 function displayFilteredDrinks(data) {
-DOM.drinksGrid.innerHTML = "";
-if (data.length === 0) {
-DOM.drinksGrid.innerHTML = `<p style="color:#aaa; width:100%; text-align:center;">قريباً...</p>`;
-return;
-}
+  DOM.drinksGrid.innerHTML = "";
 
-data.forEach((drink, index) => {
-const card = createDrinkCard(drink);
-DOM.drinksGrid.appendChild(card);
-setTimeout(() => card.classList.add("visible"), index * 50);
-});
+  if (data.length === 0) {
+    DOM.drinksGrid.innerHTML = `
+      <p style="color:#aaa; width:100%; text-align:center;">قريباً...</p>
+    `;
+    return;
+  }
+
+  data.forEach((drink, index) => {
+    const card = createDrinkCard(drink);
+    DOM.drinksGrid.appendChild(card);
+    setTimeout(() => card.classList.add("visible"), index * 50);
+  });
 }
 
 // ========== RENDER DRINKS ==========
@@ -999,7 +1012,7 @@ const weightLabel = getWeightLabel(weight);
 showToast(`تم إضافة ${drink.nameAr} (${weightLabel}) ✓`);
 
 closeWeightModal();
-renderDrinks();
+
 }
 
 // ========== MODAL MANAGEMENT ==========
@@ -1052,7 +1065,7 @@ weight: 1
 saveCart();
 updateCartUI();
 showToast(`تم إضافة ${drink.nameAr} ✓`);
-renderDrinks();
+
 }
 
 function removeFromCart(uniqueId) {
@@ -1358,7 +1371,7 @@ function toggleAvailability(id) {
   })
   .then(() => {
     showToast("تم التحديث ✅");
-    renderDrinks();
+    
     renderAdminPanel();
   })
   .catch((error) => {
