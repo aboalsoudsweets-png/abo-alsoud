@@ -601,9 +601,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const adminTrigger = document.getElementById("admin-trigger");
 
   if (adminTrigger) {
-    adminTrigger.addEventListener("click", () => {
+   adminTrigger.addEventListener("click", () => {
   clickCount++;
-  alert("عدد الضغطات: " + clickCount); // 👈 دي
 
   clearTimeout(clickTimer);
   clickTimer = setTimeout(() => {
@@ -617,7 +616,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (code === "1234") {
       isAdmin = true;
-      alert("تم تفعيل الأدمن"); // 👈 بدل toast
+      alert("تم تفعيل الأدمن");
       openAdminPanel();
     } else {
       alert("كود غلط");
