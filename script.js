@@ -595,6 +595,35 @@ weightModalClose: document.getElementById("weight-modal-close")
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     let snapshot;
+    let clickCount = 0;
+let clickTimer = null;
+
+const adminTrigger = document.getElementById("admin-trigger");
+
+if (adminTrigger) {
+  adminTrigger.addEventListener("click", () => {
+    clickCount++;
+
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => {
+      clickCount = 0;
+    }, 1500);
+
+    if (clickCount === 3) {
+      clickCount = 0;
+
+      const code = prompt("ادخل كود الادمن");
+
+      if (code === "1234") {
+        isAdmin = true;
+        showToast("تم تفعيل وضع الأدمن ✅");
+        openAdminPanel();
+      } else {
+        showToast("كود غلط ❌");
+      }
+    }
+  });
+}
 
 try {
   snapshot = await db.collection("products").get();
@@ -626,36 +655,7 @@ try {
 });
 // 👇 كود الأدمن
 // 👇 كود الأدمن
-let clickCount = 0;
-let clickTimer = null;
-
-const adminTrigger = document.getElementById("admin-trigger");
-
-if (adminTrigger) {
-  adminTrigger.addEventListener("click", () => {
-    clickCount++;
-
-    clearTimeout(clickTimer);
-    clickTimer = setTimeout(() => {
-      clickCount = 0;
-    }, 1500);
-
-    if (clickCount === 3) {
-      clickCount = 0;
-
-      const code = prompt("ادخل كود الادمن");
-
-      if (code === "1234") {
-        isAdmin = true;
-        showToast("تم تفعيل وضع الأدمن ✅");
-        openAdminPanel();
-      } else {
-        showToast("كود غلط ❌");
-      }
-    }
-
-  }); // 👈 مهم
-} // 👈 مهم
+// 👇 كود الأدمن هنا
 
 
 // ========== LOADING SCREEN ==========
@@ -1420,11 +1420,3 @@ function closeAdminPanel() {
 }
 
 
-
-
-window.onload = function () {
-  const loading = document.getElementById("loading-screen");
-  if (loading) {
-    loading.style.display = "none";
-  }
-};
