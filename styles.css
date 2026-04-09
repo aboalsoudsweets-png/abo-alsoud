@@ -1513,3 +1513,20 @@ footer p {
   background: #fff;
   width: 10px;
 }
+
+
+
+#admin-panel {
+  position: fixed;
+  top: 0;
+  right: -300px; /* مخفية برا الشاشة */
+  width: 300px;
+  height: 100%;
+  background: #111;
+  z-index: 99999;
+  padding: 20px;
+  overflow-y: auto;
+  transition: right 0.3s ease;
+  box-shadow: -5px 0 20px rgba(0,0,0,0.7);
+  border-left: 2px solid #d4af37;
+}
