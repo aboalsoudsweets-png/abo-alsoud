@@ -602,24 +602,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   if (adminTrigger) {
     adminTrigger.addEventListener("click", () => {
-      clickCount++;
+  clickCount++;
+  alert("عدد الضغطات: " + clickCount); // 👈 دي
 
-      clearTimeout(clickTimer);
-      clickTimer = setTimeout(() => {
-        clickCount = 0;
-      }, 1500);
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(() => {
+    clickCount = 0;
+  }, 1500);
 
-      if (clickCount === 3) {
-        clickCount = 0;
+  if (clickCount === 3) {
+    clickCount = 0;
 
-        const code = prompt("ادخل كود الادمن");
+    const code = prompt("ادخل كود الادمن");
 
-        if (code === "1234") {
-          isAdmin = true;
-          showToast("تم تفعيل وضع الأدمن ✅");
-          openAdminPanel();
-        } else {
-          showToast("كود غلط ❌");
+    if (code === "1234") {
+      isAdmin = true;
+      alert("تم تفعيل الأدمن"); // 👈 بدل toast
+      openAdminPanel();
+    } else {
+      alert("كود غلط");
         }
       }
     });
