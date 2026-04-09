@@ -593,64 +593,67 @@ weightModalClose: document.getElementById("weight-modal-close")
 
 // ========== INITIALIZATION ==========
 document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    let snapshot;
-    let clickCount = 0;
-let clickTimer = null;
 
-const adminTrigger = document.getElementById("admin-trigger");
+  // ✅ كود الأدمن (لوحده فوق)
+  let clickCount = 0;
+  let clickTimer = null;
 
-if (adminTrigger) {
-  adminTrigger.addEventListener("click", () => {
-    clickCount++;
+  const adminTrigger = document.getElementById("admin-trigger");
 
-    clearTimeout(clickTimer);
-    clickTimer = setTimeout(() => {
-      clickCount = 0;
-    }, 1500);
+  if (adminTrigger) {
+    adminTrigger.addEventListener("click", () => {
+      clickCount++;
 
-    if (clickCount === 3) {
-      clickCount = 0;
+      clearTimeout(clickTimer);
+      clickTimer = setTimeout(() => {
+        clickCount = 0;
+      }, 1500);
 
-      const code = prompt("ادخل كود الادمن");
+      if (clickCount === 3) {
+        clickCount = 0;
 
-      if (code === "1234") {
-        isAdmin = true;
-        showToast("تم تفعيل وضع الأدمن ✅");
-        openAdminPanel();
-      } else {
-        showToast("كود غلط ❌");
+        const code = prompt("ادخل كود الادمن");
+
+        if (code === "1234") {
+          isAdmin = true;
+          showToast("تم تفعيل وضع الأدمن ✅");
+          openAdminPanel();
+        } else {
+          showToast("كود غلط ❌");
+        }
       }
-    }
-  });
-}
-
-try {
-  snapshot = await db.collection("products").get();
-} catch (e) {
-  console.log("Firebase وقع", e);
-}
-
-    if (snapshot.empty) {
-      await uploadDefaultProducts();
-    }
-
-  } catch (error) {
-    console.error("🔥 Firebase مش شغال:", error);
-    drinks = defaultDrinks;
+    });
   }
+
+  // ✅ Firebase لوحده
+ try {
+  let snapshot = await db.collection("products").get();
+
+  if (snapshot.empty) {
+    await uploadDefaultProducts();
+    drinks = defaultDrinks;
+  } else {
+    drinks = snapshot.docs.map(doc => ({
+      firebaseId: doc.id,
+      ...doc.data()
+    }));
+  }
+
+} catch (error) {
+  console.error("🔥 Firebase مش شغال:", error);
+  drinks = defaultDrinks;
+}
 
   setupEventListeners();
   updateCartUI();
   renderDrinks();
 
-  // 👇 هنا بالظبط
   setTimeout(() => {
-  const loading = document.getElementById("loading-screen");
-  if (loading) {
-    loading.style.display = "none";
-  }
-}, 1000);
+    const loading = document.getElementById("loading-screen");
+    if (loading) {
+      loading.style.display = "none";
+    }
+  }, 1000);
 
 });
 // 👇 كود الأدمن
@@ -746,33 +749,7 @@ setTimeout(() => card.classList.add("visible"), index * 50);
 
 // ========== RENDER DRINKS ==========
 // دالة لعرض المنتجات من Firebase
-async function renderDrinks() {
-  try {
-    const snapshot = await db.collection("products").get();
-
-    if (snapshot.empty) {
-      drinks = defaultDrinks.map(d => ({
-        ...d,
-        available: true
-      }));
-    } else {
-      drinks = snapshot.docs.map(doc => ({
-        firebaseId: doc.id,
-        ...doc.data(),
-        available: doc.data().available !== false
-      }));
-    }
-
-  } catch (error) {
-    console.error("Firebase Error:", error);
-
-    // 🔥 fallback لو النت وقع
-    drinks = defaultDrinks.map(d => ({
-      ...d,
-      available: true
-    }));
-  }
-
+function renderDrinks() {
   const filtered = state.currentFilter === "all"
     ? drinks
     : drinks.filter(d => d.category === state.currentFilter);
@@ -788,6 +765,8 @@ async function renderDrinks() {
     }, index * 50);
   });
 }
+
+ 
 
 async function uploadDefaultProducts() {
   const snapshot = await db.collection("products").get();
