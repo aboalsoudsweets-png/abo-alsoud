@@ -1397,5 +1397,3 @@ function openAdminPanel() {
 function closeAdminPanel() {
   document.getElementById("admin-panel").style.right = "-100%";
 }
-
-
