@@ -31,7 +31,7 @@ ingredients: []
 },
 {
 id: "40055",
-nameAr: "  اسطنبولية و عربية نصف و نصف",
+nameAr: "  اسطنبولية و عربية مشكل",
 nameEn: "",
 price: 540,
 category: "konafa",
@@ -41,7 +41,7 @@ ingredients: []
 },
 {
 id: "400",
-nameAr: "   اسطنبولية و نابلسية نصف و نصف",
+nameAr: "   اسطنبولية و نابلسية مشكل",
 nameEn: "",
 price: 540,
 category: "konafa",
@@ -51,7 +51,7 @@ ingredients: []
 },
 {
 id: "504",
-nameAr: " نابلسية و عربية نصف و نصف ",
+nameAr: "نابلسية و عربية مشكل ",
 nameEn: "",
 price: 500,
 category: "konafa",
@@ -1209,7 +1209,7 @@ const formHtml = `
   <input 
     id="cust-address" 
     type="text" 
-    placeholder=" العنوان ( مدينة نصر و مصر الد"
+    placeholder=" العنوان ( مدينة نصر و مصر الجديدة فقط)"
     style="padding:10px; border-radius:6px; border:none; background:#222; color:#fff;"
   />
 
