@@ -1285,40 +1285,19 @@ showToast("تم إرسال الطلب بنجاح ✓");
 
 // ========== TOAST NOTIFICATIONS ==========
 
-function showToast(message) {
-  let toast = document.getElementById("toast");
 
-  // لو مش موجود، أنشئه من JS
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.id = "toast";
 
-    toast.style.position = "fixed";
-    toast.style.bottom = "30px";
-    toast.style.left = "50%";
-    toast.style.transform = "translateX(-50%)";
-    toast.style.background = "#111";
-    toast.style.color = "#fff";
-    toast.style.padding = "10px 18px";
-    toast.style.borderRadius = "8px";
-    toast.style.fontFamily = "Cairo";
-    toast.style.fontSize = "14px";
-    toast.style.zIndex = "99999";
-    toast.style.opacity = "0";
-    toast.style.transition = "0.3s";
 
-    document.body.appendChild(toast);
-  }
 
-  toast.textContent = message;
-  toast.style.opacity = "1";
-  toast.style.bottom = "50px";
 
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.bottom = "30px";
-  }, 2000);
-}
+
+
+
+
+
+
+
+  
 
 // ========== EVENT LISTENERS ==========
 function setupEventListeners() {
@@ -1443,4 +1422,39 @@ function openAdminPanel() {
 
 function closeAdminPanel() {
   document.getElementById("admin-panel").style.right = "-100%";
+}
+
+
+
+
+
+function showToast(message) {
+  let toast = document.getElementById("toast");
+
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast";
+
+    toast.style.position = "fixed";
+    toast.style.bottom = "20px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.background = "#d4af37";
+    toast.style.color = "#000";
+    toast.style.padding = "12px 20px";
+    toast.style.borderRadius = "10px";
+    toast.style.fontSize = "14px";
+    toast.style.zIndex = "99999";
+    toast.style.opacity = "0";
+    toast.style.transition = "0.3s";
+
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.style.opacity = "1";
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+  }, 2000);
 }
