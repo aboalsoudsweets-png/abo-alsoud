@@ -1285,21 +1285,38 @@ showToast("تم إرسال الطلب بنجاح ✓");
 
 // ========== TOAST NOTIFICATIONS ==========
 function showToast(message) {
-  if (!DOM.toast) {
-    alert(message); // 👈 fallback بسيط
-    return;
+  let toast = document.getElementById("toast");
+
+  // لو مش موجود، أنشئه من JS
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast";
+
+    toast.style.position = "fixed";
+    toast.style.bottom = "30px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.background = "#111";
+    toast.style.color = "#fff";
+    toast.style.padding = "10px 18px";
+    toast.style.borderRadius = "8px";
+    toast.style.fontFamily = "Cairo";
+    toast.style.fontSize = "14px";
+    toast.style.zIndex = "99999";
+    toast.style.opacity = "0";
+    toast.style.transition = "0.3s";
+
+    document.body.appendChild(toast);
   }
 
-  DOM.toast.textContent = message;
-  DOM.toast.classList.remove("hidden");
-  DOM.toast.classList.add("show");
+  toast.textContent = message;
+  toast.style.opacity = "1";
+  toast.style.bottom = "50px";
 
   setTimeout(() => {
-    DOM.toast.classList.remove("show");
-    setTimeout(() => {
-      DOM.toast.classList.add("hidden");
-    }, 400);
-  }, 2500);
+    toast.style.opacity = "0";
+    toast.style.bottom = "30px";
+  }, 2000);
 }
 
 // ========== EVENT LISTENERS ==========
