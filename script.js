@@ -1285,16 +1285,21 @@ showToast("تم إرسال الطلب بنجاح ✓");
 
 // ========== TOAST NOTIFICATIONS ==========
 function showToast(message) {
-DOM.toast.textContent = message;
-DOM.toast.classList.remove("hidden");
-DOM.toast.classList.add("show");
+  if (!DOM.toast) {
+    alert(message); // 👈 fallback بسيط
+    return;
+  }
 
-setTimeout(() => {
-DOM.toast.classList.remove("show");
-setTimeout(() => {
-DOM.toast.classList.add("hidden");
-}, 400);
-}, 2500);
+  DOM.toast.textContent = message;
+  DOM.toast.classList.remove("hidden");
+  DOM.toast.classList.add("show");
+
+  setTimeout(() => {
+    DOM.toast.classList.remove("show");
+    setTimeout(() => {
+      DOM.toast.classList.add("hidden");
+    }, 400);
+  }, 2500);
 }
 
 // ========== EVENT LISTENERS ==========
