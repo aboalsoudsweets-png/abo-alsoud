@@ -1284,6 +1284,7 @@ showToast("تم إرسال الطلب بنجاح ✓");
 }
 
 // ========== TOAST NOTIFICATIONS ==========
+
 function showToast(message) {
   let toast = document.getElementById("toast");
 
