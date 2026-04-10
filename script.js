@@ -615,12 +615,12 @@ DOM.drinksGrid.style.display = "none";
     const code = prompt("ادخل كود الادمن");
 
     if (code === "1234") {
-      isAdmin = true;
-      alert("تم تفعيل الأدمن");
-      openAdminPanel();
-    } else {
-      alert("كود غلط");
-        }
+  isAdmin = true;
+  showToast("تم تفعيل الأدمن ✓");
+  openAdminPanel();
+} else {
+  showToast("كود غلط ❌");
+}
       }
     });
   }
