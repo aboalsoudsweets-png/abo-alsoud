@@ -423,7 +423,7 @@ const categories = {
       {id:53.3 , nameEn: 'Strawberry Ice Cream', nameAr: 'آيسكريم الفراولة', descriptionEn: 'Fresh strawberry delight', descriptionAr: 'متعة الفراولة الطازة', price: 70, image: 'icecream-3.jpg' ,available: true},
       {id:54.4 , nameEn: 'Pistachio Ice Cream', nameAr: 'آيسكريم الفستق', descriptionEn: 'Creamy pistachio premium blend', descriptionAr: 'مزيج فستق كريمي فاخر', price: 70, image: 'icecream-4.jpg',available: true },
       {id:57.7 , nameEn: 'Kinder Ice Cream', nameAr: 'آيسكريم كيندر', descriptionEn: 'Creamy Kinder chocolate blend', descriptionAr: 'مزيج كيندر شوكولاتة كريمي', price: 70, image: 'icecream-7.jpg',available: true },
-      {id:58.8 , nameEn: 'Lemon Ice Cream', nameAr: 'آيسكريم الليمون', descriptionEn: 'Tangy refreshing lemon flavor', descriptionAr: 'نكهة ليمون منعشة وحامضة', price: 70, image: 'icecream-8.jpg',available: true },
+      {id:58.8 , nameEn: 'Lemon Ice Cream', nameAr: 'آيسكريم الليمون', descriptionEn: 'Tangy refreshing lemon flavor', descriptionAr: 'نكهة ليمون منعشة وحامضة', price: 50, image: 'icecream-8.jpg',available: true },
       {id:59.9 , nameEn: 'Cookies Ice Cream', nameAr: 'آيسكريم الكوكيز', descriptionEn: 'Crunchy cookies with cream', descriptionAr: 'كوكيز قرمشي مع كريم', price: 70, image: 'icecream-9.jpg',available: true },
       {id:60.10 , nameEn: 'Nutella Ice Cream', nameAr: 'آيسكريم نوتيلا', descriptionEn: 'Delicious hazelnut spread flavor', descriptionAr: 'نكهة نوتيلا اللذيذة', price: 70, image: 'icecream-10.jpg',available: true },
       {id:61.11 , nameEn: 'Dark Chocolate Ice Cream', nameAr: 'آيسكريم الشوكولاتة الداكنة', descriptionEn: 'Premium dark chocolate delight', descriptionAr: 'متعة الشوكولاتة الداكنة الفاخرة', price: 70, image: 'icecream-11.jpg',available: true },
